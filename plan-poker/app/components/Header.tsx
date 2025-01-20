@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,11 +14,12 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
+import Image from "next/image";
 
 const pages = [
-  { title: "Notícias", component: "publishNews"},
-  { title: "Compra e Venda", component: "/"},
-  { title: "Reclamações", component: "complaints"},
+  { title: "criar sala", component: "create-room"},
+  //{ title: "Compra e Venda", component: "/"},
+  //{ title: "Reclamações", component: "complaints"},
 ];
 
 const settings = ['Notificações', 'Perfil', 'Sair'];
@@ -45,7 +47,14 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Image
+            className="dark:invert"
+            src="/poker-chip-icon.svg"
+            alt="Next.js logo"
+            width={72}
+            height={72}
+            priority
+          />
           <Typography
             variant="h6"
             noWrap
@@ -61,7 +70,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            BATRY
+            PokerPlan
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -98,25 +107,7 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            BATRY
-          </Typography>
+          
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
