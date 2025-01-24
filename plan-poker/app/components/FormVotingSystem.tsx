@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { MenuItem, Select, FormControl, InputLabel, Button, Box, Typography, Input, TextField } from "@mui/material";
 
-const FormVotingSystem = () => {
-  const [selectedSystem, setSelectedSystem] = useState("1");//Default value Fibonacci
+const FormVotingSystem = ({ selectedSystem, setSelectedSystem }) => {
+
 
   interface VotingSystem {
     id: number;
@@ -35,7 +35,7 @@ const FormVotingSystem = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, mx: "auto", mt: 5, p: 3, boxShadow: 3, borderRadius: 2 }}>
+    <Box sx={{ maxWidth: 500,mr: 5, mt: 0, p: 3, boxShadow: 3, borderRadius: 2 }}>
 
       <Typography variant="h5" gutterBottom>Create your room</Typography>
       <form onSubmit={handleSubmit}>
