@@ -3,8 +3,15 @@ import { useState } from "react";
 import { MenuItem, Select, FormControl, InputLabel, Button, Box, Typography, Input, TextField } from "@mui/material";
 
 const FormVotingSystem = () => {
-  const [selectedSystem, setSelectedSystem] = useState("");
-  const votingSystem = [
+  const [selectedSystem, setSelectedSystem] = useState("1");//Default value Fibonacci
+
+  interface VotingSystem {
+    id: number;
+    system: string;
+    text: string;
+  }
+
+  const votingSystem: VotingSystem[] = [
     {
       id: 1,
       system: 'Fibonacci',
@@ -17,14 +24,14 @@ const FormVotingSystem = () => {
     }
   ]
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedSystem(event.target.value);
   };
 
 
-  const handleSubmit = (event) => {
-      event.preventDefault();
-      alert(`Voto selecionado: ${selectedSystem}`);
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    alert(`Voto selecionado: ${selectedSystem}`);
   };
 
   return (
@@ -53,8 +60,8 @@ const FormVotingSystem = () => {
         <Button 
           variant="contained" 
           color="primary" 
-          fullWidth 
-          onClick={handleSubmit} 
+          fullWidth
+          type="submit"
           >
           Submit
         </Button>
