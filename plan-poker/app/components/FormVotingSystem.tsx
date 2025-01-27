@@ -12,7 +12,13 @@ import {
   TextField,
 } from "@mui/material";
 
-const FormVotingSystem = ({ selectedSystem, setSelectedSystem }) => {
+type VotingSystemProps = {
+  selectedSystem: number;
+  setSelectedSystem: (system: number) => void;
+};
+
+
+const FormVotingSystem: React.FC<VotingSystemProps> = ({ selectedSystem, setSelectedSystem }) => {
   interface VotingSystem {
     id: number;
     system: string;
