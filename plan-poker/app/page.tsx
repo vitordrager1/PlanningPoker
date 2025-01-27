@@ -12,7 +12,7 @@ export default function Home() {
         <DefaultText text="easy to use, relaxed and fun." />
         <Box mt={3}>
           <Button variant="contained" href="create-room">
-            Criar Sala
+            Create room
           </Button>
         </Box>
       </Stack>
