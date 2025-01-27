@@ -1,10 +1,18 @@
-'use client'
+"use client";
 import { useState } from "react";
-import { MenuItem, Select, FormControl, InputLabel, Button, Box, Typography, Input, TextField } from "@mui/material";
+import {
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Button,
+  Box,
+  Typography,
+  Input,
+  TextField,
+} from "@mui/material";
 
 const FormVotingSystem = ({ selectedSystem, setSelectedSystem }) => {
-
-
   interface VotingSystem {
     id: number;
     system: string;
@@ -14,20 +22,19 @@ const FormVotingSystem = ({ selectedSystem, setSelectedSystem }) => {
   const votingSystem: VotingSystem[] = [
     {
       id: 1,
-      system: 'Fibonacci',
-      text: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21)"
+      system: "Fibonacci",
+      text: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21)",
     },
     {
       id: 2,
-      system: 'Numeric',
-      text: "Numeric (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)"
-    }
-  ]
+      system: "Numeric",
+      text: "Numeric (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)",
+    },
+  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedSystem(event.target.value);
   };
-
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -35,11 +42,21 @@ const FormVotingSystem = ({ selectedSystem, setSelectedSystem }) => {
   };
 
   return (
-    <Box sx={{ maxWidth: 500,mr: 5, mt: 0, p: 3, boxShadow: 3, borderRadius: 2 }}>
-
-      <Typography variant="h5" gutterBottom>Create your room</Typography>
+    <Box
+      sx={{ maxWidth: 500, mr: 5, mt: 0, p: 3, boxShadow: 3, borderRadius: 2 }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Create your room
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <TextField id="name-room" label="Room name" variant="outlined" autoComplete="none" required margin="normal"></TextField>
+        <TextField
+          id="name-room"
+          label="Room name"
+          variant="outlined"
+          autoComplete="none"
+          required
+          margin="normal"
+        ></TextField>
         <TextField
           id="outlined-select-currency"
           select
@@ -56,13 +73,8 @@ const FormVotingSystem = ({ selectedSystem, setSelectedSystem }) => {
             </MenuItem>
           ))}
         </TextField>
-      
-        <Button 
-          variant="contained" 
-          color="primary" 
-          fullWidth
-          type="submit"
-          >
+
+        <Button variant="contained" color="primary" fullWidth type="submit">
           Submit
         </Button>
       </form>

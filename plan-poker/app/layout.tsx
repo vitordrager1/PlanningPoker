@@ -1,8 +1,7 @@
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Silkscreen } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header"
+import Header from "./components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +19,6 @@ const silkscreen = Silkscreen({
   subsets: ["latin"],
 });
 
-
 export const metadata: Metadata = {
   title: "Planning Poker",
   description: "Planning your sprint",
@@ -36,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${silkscreen.variable} ${geistMono.variable} antialiased`}
       >
-        <Header/>
+        <Header />
         {children}
       </body>
     </html>
