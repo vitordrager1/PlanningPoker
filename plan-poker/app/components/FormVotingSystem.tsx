@@ -17,29 +17,29 @@ type VotingSystemProps = {
   setSelectedSystem: (system: number) => void;
 };
 
+interface VotingSystem {
+  id: number;
+  system: string;
+  text: string;
+}
+
+const votingSystem: VotingSystem[] = [
+  {
+    id: 1,
+    system: "Fibonacci",
+    text: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21)",
+  },
+  {
+    id: 2,
+    system: "Numeric",
+    text: "Numeric (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)",
+  },
+];
 
 const FormVotingSystem: React.FC<VotingSystemProps> = ({ selectedSystem, setSelectedSystem }) => {
-  interface VotingSystem {
-    id: number;
-    system: string;
-    text: string;
-  }
-
-  const votingSystem: VotingSystem[] = [
-    {
-      id: 1,
-      system: "Fibonacci",
-      text: "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21)",
-    },
-    {
-      id: 2,
-      system: "Numeric",
-      text: "Numeric (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)",
-    },
-  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedSystem(event.target.value);
+    setSelectedSystem(Number(event.target.value));//event vem sempre em string
   };
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
