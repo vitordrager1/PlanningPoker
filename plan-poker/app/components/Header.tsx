@@ -17,12 +17,12 @@ import Link from "next/link";
 import Image from "next/image";
 
 const pages = [
-  { title: "criar sala", component: "create-room" },
+  { title: "create room", component: "create-room" },
   //{ title: "Compra e Venda", component: "/"},
   //{ title: "Reclamações", component: "complaints"},
 ];
 
-const settings = ["Notificações", "Perfil", "Sair"];
+const settings = ["Notifications", "Perfil", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -129,7 +129,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp"/>
               </IconButton>
             </Tooltip>
             <Menu

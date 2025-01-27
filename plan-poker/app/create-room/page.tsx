@@ -11,8 +11,8 @@ export default function PageCreateRoom() {
 
   return (
     <Container>
-      <Box mx={"auto"} mt={5} border={2}>
-        <Stack direction={"row"} mx={"auto"}>
+      <Box mx={"auto"} mt={5}>
+        <Stack direction={"row"} mx={"auto"} justifyContent="center" m={5}>
           <FormVotingSystem
             selectedSystem={selectedSystem}
             setSelectedSystem={handleVotingSystemChange}
