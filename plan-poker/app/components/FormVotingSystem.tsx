@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import createRoom from "@/services/rooms/rooms-firebase";
 import {
   MenuItem,
   Select,
@@ -37,14 +39,31 @@ const votingSystem: VotingSystem[] = [
 ];
 
 const FormVotingSystem: React.FC<VotingSystemProps> = ({ selectedSystem, setSelectedSystem }) => {
+  const router = useRouter();
+  const [nameRoom, setNameRoom] = useState(String);
+
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameRoom(event.target.value);//event vem sempre em string
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedSystem(Number(event.target.value));//event vem sempre em string
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    alert(`Voto selecionado: ${selectedSystem}`);
+    try {
+      // Aguarda a resolução da promessa
+      const idRoom = await createRoom(nameRoom);
+      // Verifica se o ID foi retornado corretamente
+      if (idRoom) {
+        router.push('/rooms/' + idRoom); // Redireciona para a sala
+      } else {
+        console.error('Erro: ID da sala não foi gerado.');
+      }
+    } catch (error) {
+      console.error('Erro ao criar sala:', error);
+    }
   };
 
   return (
@@ -62,6 +81,7 @@ const FormVotingSystem: React.FC<VotingSystemProps> = ({ selectedSystem, setSele
           autoComplete="none"
           required
           margin="normal"
+          onChange={handleChangeName}
         ></TextField>
         <TextField
           id="outlined-select-currency"
