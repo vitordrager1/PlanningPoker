@@ -8,7 +8,7 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAeqP4qO27sHXAL-VW6FO5jQCDMi1IT2WE",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "poker-plan-br.firebaseapp.com",
   projectId: "poker-plan-br",
   storageBucket: "poker-plan-br.firebasestorage.app",
