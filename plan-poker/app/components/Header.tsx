@@ -15,6 +15,9 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
 import Image from "next/image";
+import { signInAnonymously,onAuthStateChanged  } from "firebase/auth";
+import { useState } from "react";
+// import {auth} from "../../services/firebase"
 
 const pages = [
   { title: "create room", component: "create-room" },
@@ -25,6 +28,18 @@ const pages = [
 const settings = ["Notifications", "Perfil", "Logout"];
 
 function ResponsiveAppBar() {
+
+  const [isLogged, setIsLogged] = useState(false)
+
+  // signInAnonymously(auth)
+  //   .then(() => {
+  //     // Signed in..
+  //   })
+  //   .catch((error) => {
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+  //     // ...
+  //   });
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -126,7 +141,7 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          {isLogged && <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp"/>
@@ -156,7 +171,7 @@ function ResponsiveAppBar() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box>}
         </Toolbar>
       </Container>
     </AppBar>
