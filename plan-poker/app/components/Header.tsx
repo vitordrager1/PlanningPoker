@@ -15,14 +15,8 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  signInAnonymously,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../../services/firebase";
+import { useAuth } from "../context/AuthContext";
 
 const pages = [
   { title: "create room", component: "create-room" },
@@ -30,7 +24,20 @@ const pages = [
   //{ title: "Reclamações", component: "complaints"},
 ];
 
-const settings = ["Notifications", "Perfil", "Logout"];
+const settings = [
+  {
+    id: 1,
+    option: "Notifications",
+  },
+  {
+    id: 2,
+    option: "Perfil",
+  },
+  {
+    id: 3,
+    option: "Logout",
+  },
+];
 const settingsLogin = [
   {
     id: 1,
@@ -43,7 +50,7 @@ const settingsLogin = [
 ];
 
 function ResponsiveAppBar() {
-  const [isLogged, setIsLogged] = useState(false);
+  const { user, logOut, signIn } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -51,20 +58,6 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
-      console.log(uid);
-      setIsLogged(true);
-      // ...
-    } else {
-      setIsLogged(false);
-      console.log(isLogged);
-    }
-  });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -80,34 +73,12 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleLogoff = (id: number) => {
+    id === 3 && logOut();
+  };
 
-  const handleLogin = (id: number) => {
-    if ((id = 2)) {
-      const provider = new GoogleAuthProvider();
-      provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
-
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          // IdP data available using getAdditionalUserInfo(result)
-          // ...
-          console.log(user);
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
-        });
-    }
+  const handleSignIn = (id: number) => {
+    id === 2 && signIn();
   };
 
   return (
@@ -189,7 +160,7 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          {isLogged ? (
+          {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -213,9 +184,15 @@ function ResponsiveAppBar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting.id}
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      handleLogoff(setting.id);
+                    }}
+                  >
                     <Typography sx={{ textAlign: "center" }}>
-                      {setting}
+                      {setting.option}
                     </Typography>
                   </MenuItem>
                 ))}
@@ -254,7 +231,7 @@ function ResponsiveAppBar() {
                     key={setting.id}
                     onClick={() => {
                       handleCloseUserMenu();
-                      handleLogin(setting.id);
+                      handleSignIn(setting.id);
                     }}
                   >
                     <Typography sx={{ textAlign: "center" }}>
