@@ -26,5 +26,5 @@ function PageCreateRoom() {
   );
 }
 
-// export default withAuth(PageCreateRoom);
-export default PageCreateRoom;
+export default withAuth(PageCreateRoom);
+// export default PageCreateRoom;

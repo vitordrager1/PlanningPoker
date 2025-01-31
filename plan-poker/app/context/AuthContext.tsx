@@ -18,23 +18,27 @@ import { auth } from "../../services/firebase";
 
 interface AuthContextType {
   user: User | null;
+  loading: boolean;
   signIn: () => Promise<void>;
   logOut: () => Promise<void>;
 }
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Estado para indicar carregamento
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      setLoading(false); // Finaliza o carregamento quando o estado do auth é resolvido
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -48,7 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, signIn, logOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, logOut }}>
       {children}
     </AuthContext.Provider>
   );

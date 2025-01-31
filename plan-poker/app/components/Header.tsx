@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -50,8 +51,8 @@ const settingsLogin = [
 ];
 
 function ResponsiveAppBar() {
-  const { user, logOut, signIn } = useAuth();
-
+  const { user, logOut, signIn, loading } = useAuth();
+  console.log(user);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -80,6 +81,10 @@ function ResponsiveAppBar() {
   const handleSignIn = (id: number) => {
     id === 2 && signIn();
   };
+
+  if (loading) {
+    return <CircularProgress />; //do MUI se preferir
+  }
 
   return (
     <AppBar position="static">

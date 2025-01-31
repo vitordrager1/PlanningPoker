@@ -20,7 +20,7 @@ const withAuth = (Component: React.ComponentType) => {
 
     if (!user) return null; // Evita renderizar o componente antes da autenticação
 
-    return <Component {...props} />;
+    return <Component />;
   };
 };
 
