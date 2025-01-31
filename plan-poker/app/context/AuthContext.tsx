@@ -44,7 +44,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = async () => {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+
+    if (result.user) {
+      const token = await result.user.getIdToken(); // Obtém o JWT do Firebase
+      localStorage.setItem("token", token); // Armazena no navegador
+      console.log("Token JWT salvo:", token);
+    }
   };
 
   const logOut = async () => {

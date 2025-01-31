@@ -8,17 +8,17 @@ interface WithAuthProps {
 
 const withAuth = (Component: React.ComponentType) => {
   return function AuthenticatedComponent(props: WithAuthProps) {
-    const { user } = useAuth();
+    const token = localStorage.getItem("token");
     const router = useRouter();
 
     useEffect(() => {
-      if (!user) {
+      if (!token) {
         alert("Você precisa estar logado para acessar esta página.");
         router.push("/"); // Redireciona para a página de login
       }
-    }, [user, router]);
+    }, [token, router]);
 
-    if (!user) return null; // Evita renderizar o componente antes da autenticação
+    if (!token) return null; // Evita renderizar o componente antes da autenticação
 
     return <Component />;
   };

@@ -52,7 +52,7 @@ const settingsLogin = [
 
 function ResponsiveAppBar() {
   const { user, logOut, signIn, loading } = useAuth();
-  console.log(user);
+  const token = localStorage.getItem("token");
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -165,7 +165,7 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          {user ? (
+          {token ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

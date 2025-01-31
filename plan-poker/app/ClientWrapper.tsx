@@ -9,8 +9,9 @@ export default function ClientWrapper({
   children: React.ReactNode;
 }) {
   const { loading } = useAuth();
-
-  if (loading) {
+  const token = localStorage.getItem("token");
+  console.log(token);
+  if (token) {
     return (
       <Box
         display="flex"

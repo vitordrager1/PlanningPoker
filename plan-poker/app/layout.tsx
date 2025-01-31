@@ -36,10 +36,10 @@ export default function RootLayout({
         <body
           className={`${silkscreen.variable} ${geistMono.variable} antialiased`}
         >
-          <ClientWrapper>
-            <Header />
-            {children}
-          </ClientWrapper>
+          {/* <ClientWrapper> */}
+          <Header />
+          {children}
+          {/* </ClientWrapper> */}
         </body>
       </AuthProvider>
     </html>
