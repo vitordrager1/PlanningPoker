@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import createRoom from "@/services/rooms/rooms-firebase";
 import {
   MenuItem,
@@ -38,31 +38,36 @@ const votingSystem: VotingSystem[] = [
   },
 ];
 
-const FormVotingSystem: React.FC<VotingSystemProps> = ({ selectedSystem, setSelectedSystem }) => {
+const FormVotingSystem: React.FC<VotingSystemProps> = ({
+  selectedSystem,
+  setSelectedSystem,
+}) => {
   const router = useRouter();
   const [nameRoom, setNameRoom] = useState(String);
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNameRoom(event.target.value);//event vem sempre em string
+    setNameRoom(event.target.value); //event vem sempre em string
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedSystem(Number(event.target.value));//event vem sempre em string
+    setSelectedSystem(Number(event.target.value)); //event vem sempre em string
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    event,
+  ) => {
     event.preventDefault();
     try {
       // Aguarda a resolução da promessa
-      const idRoom = await createRoom(nameRoom);
+      const idRoom = await createRoom(nameRoom, selectedSystem, 1);
       // Verifica se o ID foi retornado corretamente
       if (idRoom) {
-        router.push('/rooms/' + idRoom); // Redireciona para a sala
+        router.push("/rooms/" + idRoom); // Redireciona para a sala
       } else {
-        console.error('Erro: ID da sala não foi gerado.');
+        console.error("Erro: ID da sala não foi gerado.");
       }
     } catch (error) {
-      console.error('Erro ao criar sala:', error);
+      console.error("Erro ao criar sala:", error);
     }
   };
 
