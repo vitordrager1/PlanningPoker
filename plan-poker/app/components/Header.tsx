@@ -16,7 +16,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const pages = [
@@ -51,8 +51,10 @@ const settingsLogin = [
 ];
 
 function ResponsiveAppBar() {
-  const { user, logOut, signIn, loading } = useAuth();
-  const token = localStorage.getItem("token");
+  const { user, logOut, signIn } = useAuth();
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -75,6 +77,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
   const handleLogoff = (id: number) => {
+    console.log(id);
     id === 3 && logOut();
   };
 
@@ -82,9 +85,10 @@ function ResponsiveAppBar() {
     id === 2 && signIn();
   };
 
-  if (loading) {
-    return <CircularProgress />; //do MUI se preferir
-  }
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+    setLoading(false);
+  }, []);
 
   return (
     <AppBar position="static">
@@ -165,7 +169,9 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          {token ? (
+          {loading ? ( // Exibe o Spinner enquanto o token não é carregado
+            <CircularProgress color="success" size={24} />
+          ) : token ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

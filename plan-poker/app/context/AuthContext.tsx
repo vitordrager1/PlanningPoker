@@ -13,8 +13,10 @@ import {
   GoogleAuthProvider,
   signOut,
   User,
+  reload,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   user: User | null;
@@ -32,6 +34,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true); // Estado para indicar carregamento
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -50,11 +53,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const token = await result.user.getIdToken(); // Obtém o JWT do Firebase
       localStorage.setItem("token", token); // Armazena no navegador
       console.log("Token JWT salvo:", token);
+      window.location.reload();
     }
   };
 
   const logOut = async () => {
-    await signOut(auth);
+    try {
+      await signOut(auth); // Faz logout no Firebase
+      localStorage.removeItem("token"); // Remove o token do localStorage
+      window.location.reload(); // Redireciona para a página de login
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
   };
 
   return (
