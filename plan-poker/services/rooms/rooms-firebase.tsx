@@ -11,6 +11,7 @@ const createRoom = async (
     const docRef = await addDoc(collection(db, "rooms"), {
       name: roomName,
       timeSystem: selectedSystem,
+      hostId: hostId,
       createdAt: new Date(),
     });
 
