@@ -1,7 +1,7 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
 
-const createRoom = async (
+export const createRoom = async (
   roomName: string,
   selectedSystem: number,
   hostId: number,
@@ -23,4 +23,24 @@ const createRoom = async (
   }
 };
 
-export default createRoom;
+export const updateActiveUsersRoom = async (idRoom: string, idUser: string) => {
+  try {
+    // Referência ao documento específico do usuário dentro da sala
+    const userRef = doc(db, "activeUsersRoom", `${idRoom}_${idUser}`);
+
+    await setDoc(userRef, {
+      idRoom: idRoom,
+      idUser: idUser,
+      createdAt: new Date(),
+    });
+
+    console.log("Usuário adicionado à sala:", idRoom);
+    return userRef.id;
+  } catch (error) {
+    console.error("Erro ao adicionar usuário à sala:", error);
+    return null;
+  }
+};
+
+// export default createRoom;
+// export default updateActiveUsersRoom;

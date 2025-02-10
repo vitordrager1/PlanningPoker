@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import createRoom from "@/services/rooms/rooms-firebase";
+import { createRoom } from "@/services/rooms/rooms-firebase";
 import {
   MenuItem,
   Select,
