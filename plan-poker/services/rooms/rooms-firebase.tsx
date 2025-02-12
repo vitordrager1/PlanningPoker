@@ -6,6 +6,7 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
 import { User } from "@/app/models/types";
@@ -82,6 +83,27 @@ export const getUsersActiveRoom = async (idRoom: string | string[]) => {
   } catch (error) {
     console.error("Erro ao buscar usuários ativos na sala:", error);
     return [];
+  }
+};
+
+export const updateActiveUserField = async (
+  roomId: string | string[],
+  userId: string,
+  field: string,
+  value: any,
+) => {
+  try {
+    // Referência ao documento do usuário na sala
+    const userDocRef = doc(db, "activeUsersRoom", `${roomId}_${userId}`);
+
+    // Atualiza o campo específico no Firestore
+    await updateDoc(userDocRef, {
+      [field]: value, // Atualiza dinamicamente o campo desejado
+    });
+
+    console.log(`Campo ${field} atualizado com sucesso!`);
+  } catch (error) {
+    console.error("Erro ao atualizar o campo do usuário:", error);
   }
 };
 

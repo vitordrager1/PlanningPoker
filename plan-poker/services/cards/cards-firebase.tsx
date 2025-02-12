@@ -58,7 +58,6 @@ export const getCards = async (idCollectionCard: string) => {
     const data = docSnap.data();
     const cards: CollectionCard[] = data.cards || [];
 
-    console.log(cards);
     return cards;
   } catch (error) {
     console.error("Erro ao buscar coleção de cartas:", error);

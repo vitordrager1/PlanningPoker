@@ -1,10 +1,10 @@
 "use client";
 import { useParams } from "next/navigation";
-import TableVote from "@/app/components/TableVote";
 import { useRouter } from "next/navigation";
 import {
   updateActiveUsersRoom,
   getUsersActiveRoom,
+  updateActiveUserField,
 } from "@/services/rooms/rooms-firebase";
 import {
   MenuItem,
@@ -31,6 +31,7 @@ import {
   createCollectionCard,
   getCards,
 } from "@/services/cards/cards-firebase";
+//interface
 import { User, CollectionCard } from "@/app/models/types";
 
 export default function Room() {
@@ -45,7 +46,7 @@ export default function Room() {
 
   //Atualiza o activeUsersRoom quando o usuário é carregado na pagina (o useAuth altera o status do loading)
   useEffect(() => {
-    if (!user || !id) return console.log(id);
+    if (!user || !id) return;
 
     const addUserToRoom = async () => {
       try {
@@ -66,7 +67,6 @@ export default function Room() {
       try {
         const users = await getUsersActiveRoom(id);
         setActiveUsers(users);
-        console.log("Usuarios ativos", users);
       } catch (error) {
         console.log(error);
       }
@@ -93,37 +93,57 @@ export default function Room() {
     return <p>Carregando...</p>;
   }
 
-  const handleVote = (vote: number) => {
+  // const handleVote = async (vote: number) => {
+  //   if (!user) return; // Se user for null, sai da função
+  //   setSelectedVote(vote);
+  //   setActiveUsers((prev) =>
+  //     //{ ...u, vote } → Criamos um novo objeto do usuário, copiando todas as informações (...u) e substituindo apenas o vote. | : u → Se o id não for do usuário logado, retornamos o usuário sem alterações.
+  //     prev.map((u) => (u.id === user.uid ? { ...u, vote } : u)),
+  //   );
+
+  //   try{
+  //     await updateActiveUserField()
+  //   }catch(error){
+
+  //   }
+  // };
+
+  const handleVote = async (
+    idRoom: string | string[],
+    idUser: string,
+    vote: number,
+  ) => {
     if (!user) return; // Se user for null, sai da função
+
     setSelectedVote(vote);
+
+    // Atualiza diretamente o usuário correto no estado
     setActiveUsers((prev) =>
-      //{ ...u, vote } → Criamos um novo objeto do usuário, copiando todas as informações (...u) e substituindo apenas o vote. | : u → Se o id não for do usuário logado, retornamos o usuário sem alterações.
-      prev.map((u) => (u.id === user.uid ? { ...u, vote } : u)),
+      prev.map((u) => (u.id === idUser ? { ...u, vote } : u)),
     );
+
+    try {
+      // Atualiza o Firestore com o voto do usuário
+      await updateActiveUserField(idRoom, idUser, "nrVote", vote);
+      console.log("Voto atualizado no Firebase!");
+    } catch (error) {
+      console.error("Erro ao atualizar voto no Firebase:", error);
+    }
   };
 
   const getName = (idUser: string) => {
-    if (!user) return "Usuário desconhecido";
-    activeUsers.map((u) => {
-      if (u.id == idUser) {
-        console.log(user.displayName);
-        return user?.displayName ?? "Usuário desconhecido";
-      }
-    });
-  };
+    if (!user) return "Usuário desconhecido"; // Se o usuário não estiver carregado ainda
 
-  // const getName = (id: string): string => {
-  //   // Simulando busca de nome
-  //   const user = activeUsers.find((u) => u.id === id);
-  //   return user?.name ?? "Usuário desconhecido"; // Retorna um valor padrão
-  // };
+    return user.uid === idUser
+      ? (user.displayName ?? "Usuário sem nome")
+      : "Usuário desconhecido";
+  };
 
   return (
     <Box>
       <Box className="grid grid-cols-3 grid-rows-3 gap-4 w-64 h-64 border-2 border-gray-600 p-4">
         {activeUsers.map((user) => {
           const name = getName(user.id); // Definir a variável corretamente
-          console.log(name);
           return (
             <Box
               key={user.id}
@@ -142,7 +162,7 @@ export default function Room() {
         {cards.map((card) => (
           <button
             key={card.nrCard}
-            onClick={() => handleVote(card.nrCard)}
+            onClick={() => handleVote(id, user?.uid, card.nrCard)}
             className={`p-3 border rounded-md ${
               selectedVote === card.nrCard
                 ? "bg-blue-500 text-white"
