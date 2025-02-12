@@ -12,6 +12,11 @@ import {
 import { db } from "../firebase"; // Configuração do Firebase
 import { CollectionCard } from "@/app/models/types";
 
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: cards
+Descrição: Criar um novo tipo de coleção de cartas. Utilizada na votação.
+-------------------------------------------------*/
 export const createCollectionCard = async (Card: CollectionCard) => {
   try {
     // Referência ao documento do grupo de cartas
@@ -38,6 +43,11 @@ export const createCollectionCard = async (Card: CollectionCard) => {
   }
 };
 
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: cards
+Descrição: Retornar um array contendo todas as cartas de uma determinada coleção.
+-------------------------------------------------*/
 export const getCards = async (idCollectionCard: string) => {
   try {
     if (!idCollectionCard) {

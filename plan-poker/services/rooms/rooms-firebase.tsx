@@ -10,6 +10,12 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
 import { User } from "@/app/models/types";
+
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: rooms
+Descrição: Criar uma nova sala, para agrupar usuários de uma seção
+-------------------------------------------------*/
 export const createRoom = async (
   roomName: string,
   selectedSystem: number,
@@ -32,7 +38,15 @@ export const createRoom = async (
   }
 };
 
-export const updateActiveUsersRoom = async (
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: activeUsersRoom
+Descrição: Criar ou Atualizar informações de um usuário ativo na sala. A coleção agrupo um array de usuários.
+Exemplo:
+Coleção pai:   rooms
+Coleção filha: activeUsersRoom [usuario1, usuario2, usuario3]
+-------------------------------------------------*/
+export const controllerActiveUsersRoom = async (
   idRoom: string | string[],
   idUser: string,
   nrVote?: number | null, //opcional
@@ -56,6 +70,11 @@ export const updateActiveUsersRoom = async (
   }
 };
 
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: activeUsersRoom
+Descrição: Retornar um array contendo os usuários ativos de uma sala.
+-------------------------------------------------*/
 export const getUsersActiveRoom = async (idRoom: string | string[]) => {
   try {
     if (!idRoom) {
@@ -86,6 +105,11 @@ export const getUsersActiveRoom = async (idRoom: string | string[]) => {
   }
 };
 
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: activeUsersRoom
+Descrição: Atualizar um campo de forma dinamica da coleção activeUsersRoom
+-------------------------------------------------*/
 export const updateActiveUserField = async (
   roomId: string | string[],
   userId: string,

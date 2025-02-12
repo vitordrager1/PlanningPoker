@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import {
-  updateActiveUsersRoom,
+  controllerActiveUsersRoom,
   getUsersActiveRoom,
   updateActiveUserField,
 } from "@/services/rooms/rooms-firebase";
@@ -50,7 +50,7 @@ export default function Room() {
 
     const addUserToRoom = async () => {
       try {
-        await updateActiveUsersRoom(id, user.uid, selectedVote); // Aguarde a atualização da sala
+        await controllerActiveUsersRoom(id, user.uid, selectedVote); // Aguarde a atualização da sala
       } catch (error) {
         console.error("Erro ao adicionar usuário na sala:", error);
       }
