@@ -14,6 +14,7 @@ import {
   signOut,
   User,
   reload,
+  signInAnonymously,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: () => Promise<void>;
   logOut: () => Promise<void>;
+  signInAnonymous: () => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -57,6 +59,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const signInAnonymous = async () => {
+    //const provider = new GoogleAuthProvider();
+    const result = await signInAnonymously(auth);
+
+    if (result.user) {
+      const token = await result.user.getIdToken(); // Obtém o JWT do Firebase
+      localStorage.setItem("token", token); // Armazena no navegador
+      console.log("Token JWT salvo:", token);
+      window.location.reload();
+    }
+  };
+
   const logOut = async () => {
     try {
       await signOut(auth); // Faz logout no Firebase
@@ -68,7 +82,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, logOut }}>
+    <AuthContext.Provider
+      value={{ user, loading, signIn, logOut, signInAnonymous }}
+    >
       {children}
     </AuthContext.Provider>
   );

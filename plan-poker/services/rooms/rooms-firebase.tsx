@@ -9,7 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
-import { User } from "@/app/models/types";
+import { User, ActiveUser } from "@/app/models/types";
 
 /* -------------------------------------------------
 Autor: Vitor Drager
@@ -49,18 +49,24 @@ Coleção filha: activeUsersRoom [usuario1, usuario2, usuario3]
 export const controllerActiveUsersRoom = async (
   idRoom: string | string[],
   idUser: string,
+  nmUser: string | string[] | null,
   nrVote?: number | null, //opcional
 ) => {
   try {
     // Referência ao documento específico do usuário dentro da sala
     const userRef = doc(db, "activeUsersRoom", `${idRoom}_${idUser}`);
 
-    await setDoc(userRef, {
-      idRoom: idRoom,
-      idUser: idUser,
-      nrVote: nrVote || null,
-      createdAt: new Date(),
-    });
+    await setDoc(
+      userRef,
+      {
+        idRoom: idRoom,
+        idUser: idUser,
+        nrVote: nrVote || null,
+        nmUser: nmUser,
+        createdAt: new Date(),
+      },
+      { merge: true }, // Garante que os dados existentes não sejam sobrescritos
+    );
 
     console.log("Usuário adicionado à sala:", idRoom);
     return userRef.id;

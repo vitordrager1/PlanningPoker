@@ -51,7 +51,7 @@ const settingsLogin = [
 ];
 
 function ResponsiveAppBar() {
-  const { user, logOut, signIn } = useAuth();
+  const { user, logOut, signIn, signInAnonymous } = useAuth();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -77,12 +77,12 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
   const handleLogoff = (id: number) => {
-    console.log(id);
     id === 3 && logOut();
   };
 
   const handleSignIn = (id: number) => {
     id === 2 && signIn();
+    id === 1 && signInAnonymous();
   };
 
   useEffect(() => {

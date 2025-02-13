@@ -10,3 +10,10 @@ export interface User {
   name: string;
   vote?: number; // Opcional, caso o usuário ainda não tenha votado
 }
+
+export interface ActiveUser {
+  idUser: string;
+  idRoom: string;
+  nrVote: number | null;
+  nmUser: string | string[] | null;
+}

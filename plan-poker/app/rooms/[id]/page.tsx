@@ -1,6 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   controllerActiveUsersRoom,
   getUsersActiveRoom,
@@ -15,6 +14,7 @@ import {
   Box,
   Typography,
   Input,
+  Container,
   TextField,
 } from "@mui/material";
 import {
@@ -33,16 +33,27 @@ import {
 } from "@/services/cards/cards-firebase";
 //interface
 import { User, CollectionCard } from "@/app/models/types";
-
-export default function Room() {
+import useActiveUsers from "@/app/hooks/ActiveUsers";
+import withAuth from "@/services/authentication/verifyAuth";
+import Card from "@/app/components/Card";
+function Room() {
   const params = useParams();
+  const router = useRouter();
   const { id } = params;
-  const { user, loading } = useAuth(); // Usuário autenticado
-  const [activeUsers, setActiveUsers] = useState<User[]>([]);
+  const { user, loading } = useAuth();
   const [cards, setCards] = useState<CollectionCard[]>([]);
   const [selectedVote, setSelectedVote] = useState<number | null>(null);
 
-  //const cards = ["1", "2", "3", "5", "8", "13", "21", "?", "Cooffe"];
+  //chama o hook para atualizar a lista de usuários
+  const { activeUsers } = useActiveUsers(id);
+  console.log(activeUsers);
+
+  //Define que o idRoom é obrigatório
+  if (!id) {
+    // Redirecionar para uma página de erro ou para a página inicial
+    router.push("/");
+    return null; // Retorna null para evitar renderização desnecessária
+  }
 
   //Atualiza o activeUsersRoom quando o usuário é carregado na pagina (o useAuth altera o status do loading)
   useEffect(() => {
@@ -50,7 +61,12 @@ export default function Room() {
 
     const addUserToRoom = async () => {
       try {
-        await controllerActiveUsersRoom(id, user.uid, selectedVote); // Aguarde a atualização da sala
+        await controllerActiveUsersRoom(
+          id,
+          user.uid,
+          user.displayName,
+          selectedVote,
+        ); // Aguarde a atualização da sala
       } catch (error) {
         console.error("Erro ao adicionar usuário na sala:", error);
       }
@@ -59,23 +75,8 @@ export default function Room() {
     addUserToRoom();
   }, [loading]);
 
-  //executa apenas quando o id da sala é carregado
-  useEffect(() => {
-    if (!id) return;
-
-    const usersActive = async () => {
-      try {
-        const users = await getUsersActiveRoom(id);
-        setActiveUsers(users);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    usersActive();
-  }, [id]);
-
   //executa apenas 1x ao renderizar o compo
+  //GetCards
   useEffect(() => {
     const getCardsFibonacci = async () => {
       try {
@@ -89,39 +90,18 @@ export default function Room() {
     getCardsFibonacci();
   }, []);
 
+  //Aguarda carregar o useAuth
   if (loading) {
     return <p>Carregando...</p>;
   }
 
-  // const handleVote = async (vote: number) => {
-  //   if (!user) return; // Se user for null, sai da função
-  //   setSelectedVote(vote);
-  //   setActiveUsers((prev) =>
-  //     //{ ...u, vote } → Criamos um novo objeto do usuário, copiando todas as informações (...u) e substituindo apenas o vote. | : u → Se o id não for do usuário logado, retornamos o usuário sem alterações.
-  //     prev.map((u) => (u.id === user.uid ? { ...u, vote } : u)),
-  //   );
-
-  //   try{
-  //     await updateActiveUserField()
-  //   }catch(error){
-
-  //   }
-  // };
-
   const handleVote = async (
     idRoom: string | string[],
-    idUser: string,
     vote: number,
+    idUser?: string,
   ) => {
-    if (!user) return; // Se user for null, sai da função
-
+    if (!user || !idRoom || !idUser || !vote) return; // Se user for null, sai da função
     setSelectedVote(vote);
-
-    // Atualiza diretamente o usuário correto no estado
-    setActiveUsers((prev) =>
-      prev.map((u) => (u.id === idUser ? { ...u, vote } : u)),
-    );
-
     try {
       // Atualiza o Firestore com o voto do usuário
       await updateActiveUserField(idRoom, idUser, "nrVote", vote);
@@ -131,38 +111,31 @@ export default function Room() {
     }
   };
 
-  const getName = (idUser: string) => {
-    if (!user) return "Usuário desconhecido"; // Se o usuário não estiver carregado ainda
-
-    return user.uid === idUser
-      ? (user.displayName ?? "Usuário sem nome")
-      : "Usuário desconhecido";
-  };
-
   return (
-    <Box>
-      <Box className="grid grid-cols-3 grid-rows-3 gap-4 w-64 h-64 border-2 border-gray-600 p-4">
+    <Container className="flex flex-col">
+      <Box
+        className="grid gap-8 p-4 rounded-lg mt-10"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))" }}
+      >
         {activeUsers.map((user) => {
-          const name = getName(user.id); // Definir a variável corretamente
           return (
             <Box
-              key={user.id}
-              className="flex flex-col items-center justify-center p-2 border rounded-lg"
+              key={user.idUser}
+              className="flex flex-col items-center justify-center min-w-32 min-h-44 p-4 border-2 border-gray-500 rounded-lg shadow-md bg-white"
             >
-              <p className="text-sm font-bold">{name}</p>
-              <p className="text-xl">{user.vote ?? "❔"}</p>{" "}
-              {/* Ainda sem voto */}
+              <Typography fontFamily={"monospace"}>{user.nmUser}</Typography>
+              <Card nrCard={user.nrVote}></Card>
             </Box>
           );
         })}
       </Box>
 
       {/* Seleção de Cartas */}
-      <Box className="flex gap-2">
+      <Box className="flex items-center mx-auto gap-2">
         {cards.map((card) => (
           <button
             key={card.nrCard}
-            onClick={() => handleVote(id, user?.uid, card.nrCard)}
+            onClick={() => handleVote(id, card.nrCard, user?.uid)}
             className={`p-3 border rounded-md ${
               selectedVote === card.nrCard
                 ? "bg-blue-500 text-white"
@@ -173,6 +146,8 @@ export default function Room() {
           </button>
         ))}
       </Box>
-    </Box>
+    </Container>
   );
 }
+
+export default withAuth(Room);
