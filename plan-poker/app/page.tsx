@@ -13,7 +13,7 @@ export default function Home() {
         <DefaultTitle title="Start your sprint in the best way!" style="bold" />
         <DefaultText text="easy to use, relaxed and fun." />
         <Box mt={3}>
-          <Button variant="contained" href="create-room">
+          <Button variant="contained" href="create-room" className="defaultRed">
             Create room
           </Button>
         </Box>

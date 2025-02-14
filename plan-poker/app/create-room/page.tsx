@@ -14,12 +14,18 @@ function PageCreateRoom() {
   return (
     <Container>
       <Box mx={"auto"} mt={5}>
-        <Stack direction={"row"} mx={"auto"} justifyContent="center" m={5}>
+        <Stack
+          direction={"row"}
+          mx={"auto"}
+          justifyContent="center"
+          m={5}
+          sx={{ minHeight: "60vh" }}
+        >
           <FormVotingSystem
             selectedSystem={selectedSystem}
             setSelectedSystem={handleVotingSystemChange}
           />
-          <DayTimeFrame id={selectedSystem} />
+          {/* <DayTimeFrame id={selectedSystem} /> */}
         </Stack>
       </Box>
     </Container>

@@ -91,11 +91,11 @@ function ResponsiveAppBar() {
   }, []);
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "var(--header)" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Image
-            className="dark:invert"
+            color="info"
             src="/poker-chip-icon.svg"
             alt="Next.js logo"
             width={72}
@@ -113,7 +113,7 @@ function ResponsiveAppBar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "var(--button-header)",
               textDecoration: "none",
             }}
           >
@@ -127,7 +127,7 @@ function ResponsiveAppBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              sx={{ color: "var(--button-header)" }}
             >
               <MenuIcon />
             </IconButton>
@@ -145,11 +145,28 @@ function ResponsiveAppBar() {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
+              sx={{
+                display: {
+                  xs: "block",
+                  md: "none",
+                },
+              }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.component} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
+                <MenuItem
+                  key={page.component}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    background: "var(--header)",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      textAlign: "center",
+                      color: "var(--button-header)",
+                      fontWeight: "bold",
+                    }}
+                  >
                     {page.title}
                   </Typography>
                 </MenuItem>
@@ -162,7 +179,12 @@ function ResponsiveAppBar() {
               <Button
                 key={page.component}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{
+                  my: 2,
+                  color: "var(--button-header)",
+                  display: "block",
+                  fontWeight: "bold",
+                }}
                 href={page.component}
               >
                 {page.title}

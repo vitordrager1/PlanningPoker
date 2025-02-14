@@ -105,7 +105,13 @@ const FormVotingSystem: React.FC<VotingSystemProps> = ({
           ))}
         </TextField>
 
-        <Button variant="contained" color="primary" fullWidth type="submit">
+        <Button
+          variant="contained"
+          className="defaultRed"
+          fullWidth
+          type="submit"
+          sx={{ marginTop: "2rem" }}
+        >
           Submit
         </Button>
       </form>

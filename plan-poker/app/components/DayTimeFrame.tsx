@@ -9,23 +9,24 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from "@mui/material";
 import dataVotingSystem from "../../database/SystemVoting.json";
 const DayTimeFrame = ({ id }: { id: number }) => {
   return (
-    <Box>
-      <TableContainer component={Paper}>
+    <Box className="defaultBlue">
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>
-                <strong>Card</strong>
+                <Typography className="defaultBlue">Card</Typography>
               </TableCell>
               <TableCell>
-                <strong>Hours</strong>
+                <Typography className="defaultBlue">Hours</Typography>
               </TableCell>
               <TableCell>
-                <strong>Days</strong>
+                <Typography className="defaultBlue">Days</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -34,9 +35,13 @@ const DayTimeFrame = ({ id }: { id: number }) => {
               .filter((data) => data.id === id)
               .map((data) => (
                 <TableRow key={data.sequencia}>
-                  <TableCell>{data.numero}</TableCell>
-                  <TableCell>{data.horas ?? "-"}</TableCell>
-                  <TableCell>{data.dias ?? "-"}</TableCell>
+                  <TableCell className="defaultBlue">{data.numero}</TableCell>
+                  <TableCell className="defaultBlue">
+                    {data.horas ?? " "}
+                  </TableCell>
+                  <TableCell className="defaultBlue">
+                    {data.dias ?? " "}
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
