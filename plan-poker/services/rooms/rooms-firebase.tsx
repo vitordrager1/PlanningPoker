@@ -135,6 +135,7 @@ export const updateActiveUserField = async (
     console.log(`Campo ${field} atualizado com sucesso!`);
   } catch (error) {
     console.error("Erro ao atualizar o campo do usuário:", error);
+    throw error;
   }
 };
 

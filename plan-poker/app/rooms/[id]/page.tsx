@@ -38,7 +38,7 @@ import useActiveUsers from "@/app/hooks/ActiveUsers";
 import withAuth from "@/services/authentication/withAuth";
 import Card from "@/app/components/Card";
 import Header from "@/app/components/Header";
-import ModalError from "@/app/layouts/DefaultAlert";
+import DefaultAlert from "@/app/layouts/DefaultAlert";
 
 function Room() {
   const params = useParams();
@@ -48,7 +48,7 @@ function Room() {
   const [cards, setCards] = useState<CollectionCard[]>([]);
   const [selectedVote, setSelectedVote] = useState<number | null>(null);
   const [isValidRoom, setIsValidRoom] = useState<boolean | null>(null);
-
+  const [openModalError, setOpenModalError] = useState(false);
   //chama o hook para atualizar a lista de usuários
   const { activeUsers } = useActiveUsers(id);
 
@@ -81,11 +81,10 @@ function Room() {
       try {
         const isValid = await isRoom(id);
         if (!isValid) {
-          console.log("Id informado nao existe");
           setIsValidRoom(false);
-          return;
+        } else {
+          setIsValidRoom(true);
         }
-        setIsValidRoom(true);
       } catch (error) {
         console.log(error);
         setIsValidRoom(false);
@@ -96,12 +95,19 @@ function Room() {
       try {
         await controllerActiveUsersRoom(
           id,
-          user.uid,
+          "user.uid",
           user.displayName,
           selectedVote,
         ); // Aguarde a atualização da sala
       } catch (error) {
-        console.error("Erro ao adicionar usuário na sala:", error);
+        console.error("Failed to create the room:", error);
+        <DefaultAlert
+          title="Something is wrong..."
+          message="Failed to create the room. Contact an administrator."
+          route="/"
+          severity="error"
+          color="error"
+        />;
       }
     };
 
@@ -124,9 +130,8 @@ function Room() {
 
   // Se a sala não for válida, não renderizar o componente
   if (!isValidRoom) {
-    console.log("estou aqui");
     return (
-      <ModalError
+      <DefaultAlert
         title="Room not found"
         message="The identifier provided does not exist, please insert another ID."
         route="/"
@@ -146,15 +151,24 @@ function Room() {
     try {
       // Atualiza o Firestore com o voto do usuário
       await updateActiveUserField(idRoom, idUser, "nrVote", vote);
-      console.log("Voto atualizado no Firebase!");
     } catch (error) {
-      console.error("Erro ao atualizar voto no Firebase:", error);
+      console.error("Failed to update the room:", error);
+      setOpenModalError(true);
     }
   };
 
   return (
     <>
       <Header componentName="room" />
+      {DefaultAlert && (
+        <DefaultAlert
+          title="Something is wrong..."
+          message="Failed to update your vote in the room. Contact an administrator."
+          route="/"
+          severity="error"
+          color="error"
+        />
+      )}
       <Container className="flex flex-col">
         <Box
           className="grid gap-8 p-4 rounded-lg mt-10"

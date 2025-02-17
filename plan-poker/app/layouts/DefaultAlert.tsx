@@ -15,20 +15,23 @@ const DefaultAlert: React.FC<AlertProps> = ({
 }) => {
   return (
     <>
-      {/*O símbolo <> </> é conhecido como um Fragment no React. Ele permite agrupar múltiplos elementos JSX sem adicionar um elemento extra ao DOM, como uma div ou Box.    */}
-      <Header componentName="home" />
       <Alert
         severity={severity}
         color={color}
         variant="filled"
-        action={
-          <Button color="inherit" variant="outlined" size="large" href={route}>
-            OK
-          </Button>
-        }
+        onClose={() => {}}
       >
         <AlertTitle>{title}</AlertTitle>
         {message}
+        <Button
+          className="float-right mr-auto"
+          color="inherit"
+          variant="outlined"
+          size="large"
+          href={route ? route : ""}
+        >
+          OK
+        </Button>
       </Alert>
     </>
   );
