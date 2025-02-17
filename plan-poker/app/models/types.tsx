@@ -22,3 +22,8 @@ export interface Pages {
   title: string;
   component: string;
 }
+
+export interface ModalEnterRoomProps {
+  openModal: boolean;
+  setOpenModal: (state: boolean) => void;
+}

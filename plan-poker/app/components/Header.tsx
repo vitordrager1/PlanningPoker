@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Pages } from "../models/types";
+import ModalEnterRoom from "./ModalEnterRoom";
 
 const settings = [
   // {
@@ -50,7 +51,7 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pages, setPages] = useState<Pages[] | null>(null);
-
+  const [openModal, setOpenModal] = useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -78,7 +79,7 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
     if (nameComponent == "home") {
       let pages = [
         { title: "Create Room", component: "create-room" },
-        { title: "enter room", component: "" },
+        { title: "enter room", component: "", modal: "ModalEnterRoom" },
       ];
       setPages(pages);
     }
@@ -97,10 +98,11 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
     id === 1 && signInAnonymous();
   };
 
-  const handleEnterRoom = () => {
-    console.log("teste");
-    return;
+  const handleOpenModal = () => {
+    setOpenModal(true);
   };
+
+  const handleCloseModal = () => setOpenModal(false);
 
   useEffect(() => {
     setToken(localStorage.getItem("token"));
@@ -109,13 +111,14 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
   }, []);
 
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "var(--dark-green-forest)" }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {/* <Image
+    <>
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: "var(--dark-green-forest)" }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {/* <Image
             color=""
             src="/poker-chip-icon.svg"
             alt="Next.js logo"
@@ -123,193 +126,197 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
             height={72}
             priority
           /> */}
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "var(--white)",
-              textDecoration: "none",
-            }}
-          >
-            PokerPlan
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              sx={{ color: "var(--ligth-green-forest)" }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: {
-                  xs: "block",
-                  md: "none",
-                },
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "var(--white)",
+                textDecoration: "none",
               }}
             >
+              PokerPlan
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                sx={{ color: "var(--ligth-green-forest)" }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: {
+                    xs: "block",
+                    md: "none",
+                  },
+                }}
+              >
+                {pages &&
+                  pages.map((page) => (
+                    <MenuItem
+                      key={page.component}
+                      onClick={() => {
+                        handleCloseNavMenu(), handleOpenModal();
+                      }}
+                      sx={{
+                        background: "var(--white)",
+                      }}
+                    >
+                      <Button
+                        key={page.component}
+                        onClick={handleCloseNavMenu}
+                        sx={{
+                          my: 2,
+                          color: "var(--dark-green-forest)",
+                          background: "var(--ligth-green-forest)",
+                        }}
+                        href={page.component}
+                      >
+                        {page.title}
+                      </Button>
+                    </MenuItem>
+                  ))}
+              </Menu>
+            </Box>
+
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages &&
                 pages.map((page) => (
-                  <MenuItem
+                  <Button
                     key={page.component}
-                    onClick={() => {
-                      handleCloseNavMenu(), handleEnterRoom();
+                    onClick={handleCloseNavMenu}
+                    sx={{
+                      my: 2,
+                      color: "var(--button-header)",
+                      display: "block",
+                      fontWeight: "bold",
                     }}
+                    href={page.component}
+                  >
+                    {page.title}
+                  </Button>
+                ))}
+            </Box>
+            {loading ? ( // Exibe o Spinner enquanto o token não é carregado
+              <CircularProgress color="success" size={24} />
+            ) : token ? ( //se estiver logado, exibe o menu settings
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="user avatar" src={"./avatar.png"} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting.id}
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        handleLogoff(setting.id);
+                      }}
+                    >
+                      <Typography sx={{ textAlign: "center" }}>
+                        {setting.option}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            ) : (
+              //Não esta logado
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open Signup/Login options">
+                  <Button
+                    variant="contained"
+                    onClick={handleOpenUserMenu}
                     sx={{
                       background: "var(--white)",
+                      color: "var(--dark-green-forest)",
+                      fontWeight: "bold",
                     }}
                   >
-                    <Button
-                      key={page.component}
-                      onClick={handleCloseNavMenu}
-                      sx={{
-                        my: 2,
-                        color: "var(--dark-green-forest)",
-                        background: "var(--ligth-green-forest)",
+                    Login/Signup
+                  </Button>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settingsLogin.map((setting) => (
+                    <MenuItem
+                      key={setting.id}
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        handleSignIn(setting.id);
                       }}
-                      href={page.component}
                     >
-                      {page.title}
-                    </Button>
-                  </MenuItem>
-                ))}
-            </Menu>
-          </Box>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages &&
-              pages.map((page) => (
-                <Button
-                  key={page.component}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    color: "var(--button-header)",
-                    display: "block",
-                    fontWeight: "bold",
-                  }}
-                  href={page.component}
-                >
-                  {page.title}
-                </Button>
-              ))}
-          </Box>
-          {loading ? ( // Exibe o Spinner enquanto o token não é carregado
-            <CircularProgress color="success" size={24} />
-          ) : token ? ( //se estiver logado, exibe o menu settings
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="user avatar" src={"./avatar.png"} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting.id}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      handleLogoff(setting.id);
-                    }}
-                  >
-                    <Typography sx={{ textAlign: "center" }}>
-                      {setting.option}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          ) : (
-            //Não esta logado
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open Signup/Login options">
-                <Button
-                  variant="contained"
-                  onClick={handleOpenUserMenu}
-                  sx={{
-                    background: "var(--white)",
-                    color: "var(--dark-green-forest)",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Login/Signup
-                </Button>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settingsLogin.map((setting) => (
-                  <MenuItem
-                    key={setting.id}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      handleSignIn(setting.id);
-                    }}
-                  >
-                    <Typography sx={{ textAlign: "center" }}>
-                      {setting.option}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          )}
-        </Toolbar>
-      </Container>
-    </AppBar>
+                      <Typography sx={{ textAlign: "center" }}>
+                        {setting.option}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            )}
+          </Toolbar>
+        </Container>
+      </AppBar>
+      {openModal && (
+        <ModalEnterRoom openModal={openModal} setOpenModal={handleCloseModal} />
+      )}
+    </>
   );
 }
 export default ResponsiveAppBar;
