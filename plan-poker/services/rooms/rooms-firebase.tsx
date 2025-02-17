@@ -7,6 +7,7 @@ import {
   query,
   where,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
 import { User, ActiveUser } from "@/app/models/types";
@@ -134,6 +135,27 @@ export const updateActiveUserField = async (
     console.log(`Campo ${field} atualizado com sucesso!`);
   } catch (error) {
     console.error("Erro ao atualizar o campo do usuário:", error);
+  }
+};
+
+/* -------------------------------------------------
+Autor: Vitor Drager
+Coleção: rooms
+Descrição: Retornar um indicador true ou false referente a existencia de uma sala na coleção.
+-------------------------------------------------*/
+export const isRoom = async (roomId: string | string[]): Promise<boolean> => {
+  try {
+    if (!roomId) return false; // Se o roomId for inválido, retorna false
+
+    // Referência ao documento da sala
+    const roomRef = doc(db, "rooms", `${roomId}`);
+    const roomSnap = await getDoc(roomRef);
+
+    // Retorna true se o documento existir, caso contrário, false
+    return roomSnap.exists();
+  } catch (error) {
+    console.error("Erro ao verificar a existência da sala:", error);
+    return false; // Em caso de erro, retorna false por segurança
   }
 };
 

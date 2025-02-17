@@ -4,6 +4,7 @@ import {
   controllerActiveUsersRoom,
   getUsersActiveRoom,
   updateActiveUserField,
+  isRoom,
 } from "@/services/rooms/rooms-firebase";
 import {
   MenuItem,
@@ -44,10 +45,10 @@ function Room() {
   const { user, loading } = useAuth();
   const [cards, setCards] = useState<CollectionCard[]>([]);
   const [selectedVote, setSelectedVote] = useState<number | null>(null);
+  const [isValidRoom, setIsValidRoom] = useState<boolean | null>(null);
 
   //chama o hook para atualizar a lista de usuários
   const { activeUsers } = useActiveUsers(id);
-  console.log(activeUsers);
 
   //Define que o idRoom é obrigatório
   if (!id) {
@@ -56,9 +57,38 @@ function Room() {
     return null; // Retorna null para evitar renderização desnecessária
   }
 
+  //executa apenas 1x ao renderizar o compo
+  //GetCards
+  useEffect(() => {
+    const getCardsFibonacci = async () => {
+      try {
+        const cards = await getCards("fibonacci");
+        setCards(cards);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCardsFibonacci();
+  }, []);
+
   //Atualiza o activeUsersRoom quando o usuário é carregado na pagina (o useAuth altera o status do loading)
   useEffect(() => {
     if (!user || !id) return;
+
+    const validateIdRoom = async () => {
+      try {
+        const isValid = await isRoom(id);
+        if (!isValid) {
+          console.log("Id informado nao existe");
+          setIsValidRoom(false);
+          return;
+        }
+        setIsValidRoom(true);
+      } catch (error) {
+        console.log(error);
+        setIsValidRoom(false);
+      }
+    };
 
     const addUserToRoom = async () => {
       try {
@@ -73,27 +103,26 @@ function Room() {
       }
     };
 
-    addUserToRoom();
+    validateIdRoom().then(() => {
+      if (isValidRoom) {
+        addUserToRoom();
+      }
+    });
   }, [loading]);
 
-  //executa apenas 1x ao renderizar o compo
-  //GetCards
-  useEffect(() => {
-    const getCardsFibonacci = async () => {
-      try {
-        const cards = await getCards("fibonacci");
-        setCards(cards);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getCardsFibonacci();
-  }, []);
+  // Se ainda não verificou, exibir um loading
+  if (isValidRoom === null) {
+    return <p>Carregando...</p>;
+  }
 
   //Aguarda carregar o useAuth
   if (loading) {
     return <p>Carregando...</p>;
+  }
+
+  // Se a sala não for válida, não renderizar o componente
+  if (!isValidRoom) {
+    return <p>Id informado não existe.</p>;
   }
 
   const handleVote = async (
