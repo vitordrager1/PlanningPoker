@@ -1,3 +1,6 @@
+import { OverridableStringUnion } from "@mui/types";
+import { AlertColor } from "@mui/material";
+import { AlertPropsColorOverrides } from "@mui/material";
 export interface CollectionCard {
   idCollectionCard: string; // ID da coleção de cartas
   nrCard: number; // Número da carta
@@ -26,4 +29,18 @@ export interface Pages {
 export interface ModalEnterRoomProps {
   openModal: boolean;
   setOpenModal: (state: boolean) => void;
+}
+export interface AlertProps {
+  title?: string;
+  message?: string;
+  route?: string;
+  severity: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>;
+  color: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>;
+}
+
+export interface IMenuItem {
+  title: string;
+  path: string;
+  show: boolean;
+  modal?: string;
 }

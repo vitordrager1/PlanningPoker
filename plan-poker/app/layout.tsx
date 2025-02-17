@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Silkscreen } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import { AuthProvider } from "./context/AuthContext";
-import ClientWrapper from "./ClientWrapper";
 import React from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,9 +38,7 @@ export default function RootLayout({
         <body
           className={`${silkscreen.variable} ${geistMono.variable} antialiased`}
         >
-          {/* <ClientWrapper> */}
           {children}
-          {/* </ClientWrapper> */}
         </body>
       </AuthProvider>
     </html>

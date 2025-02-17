@@ -20,16 +20,10 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Pages } from "../models/types";
 import ModalEnterRoom from "./ModalEnterRoom";
+import { usePathname } from "next/navigation";
+import { IMenuItem } from "../models/types";
 
 const settings = [
-  // {
-  //   id: 1,
-  //   option: "Notifications",
-  // },
-  // {
-  //   id: 2,
-  //   option: "Perfil",
-  // },
   {
     id: 3,
     option: "Logout",
@@ -48,10 +42,12 @@ const settingsLogin = [
 
 function ResponsiveAppBar({ componentName }: { componentName: string }) {
   const { user, logOut, signIn, signInAnonymous } = useAuth();
+  const pathname = usePathname();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [pages, setPages] = useState<Pages[] | null>(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalEnterRoom, setOpenModalEnterRoom] = useState(false);
+  const [menuItems, setMenuItems] = useState<IMenuItem[]>([]);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -74,20 +70,17 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
     setAnchorElUser(null);
   };
 
-  //funções para configurar o menu
-  const startPages = (nameComponent: string) => {
-    if (nameComponent == "home") {
-      let pages = [
-        { title: "Create Room", component: "create-room" },
-        { title: "enter room", component: "", modal: "ModalEnterRoom" },
-      ];
-      setPages(pages);
-    }
-    if (nameComponent == "create-room") {
-      let pages = [{ title: "Home", component: "/" }];
-      setPages(pages);
-    }
-  };
+  // const menuItems = [
+  //   { title: "Home", path: "/", show: true },
+  //   { title: "Create Room", path: "create-room", show: true },
+  //   { title: "Enter Room", path: "", show: true, modal: "ModalEnterRoom" },
+  // ];
+
+  // setMenuItems([
+  //   { title: "Home", path: "/", show: true },
+  //   { title: "Create Room", path: "create-room", show: true },
+  //   { title: "Enter Room", path: "", show: true, modal: "ModalEnterRoom" },
+  // ]);
 
   const handleLogoff = (id: number) => {
     id === 3 && logOut();
@@ -98,16 +91,29 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
     id === 1 && signInAnonymous();
   };
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleOpenModalEnterRoom = () => {
+    setOpenModalEnterRoom(true);
   };
-
-  const handleCloseModal = () => setOpenModal(false);
+  const handleCloseModal = () => setOpenModalEnterRoom(false);
 
   useEffect(() => {
     setToken(localStorage.getItem("token"));
     setLoading(false);
-    startPages(componentName);
+
+    setMenuItems([
+      { title: "Home", path: "/", show: true },
+      {
+        title: "Create Room",
+        path: "create-room",
+        show: pathname.includes("/rooms") ? false : true,
+      },
+      {
+        title: "Enter Room",
+        path: "",
+        show: pathname.includes("/rooms") ? false : true,
+        modal: "ModalEnterRoom",
+      },
+    ]);
   }, []);
 
   return (
@@ -173,52 +179,40 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
                   display: {
                     xs: "block",
                     md: "none",
+                    flex: "",
                   },
                 }}
               >
-                {pages &&
-                  pages.map((page) => (
-                    <MenuItem
-                      key={page.component}
-                      onClick={() => {
-                        handleCloseNavMenu(), handleOpenModal();
-                      }}
-                      sx={{
-                        background: "var(--white)",
-                      }}
-                    >
-                      <Button
-                        key={page.component}
-                        onClick={handleCloseNavMenu}
-                        sx={{
-                          my: 2,
-                          color: "var(--dark-green-forest)",
-                          background: "var(--ligth-green-forest)",
-                        }}
-                        href={page.component}
-                      >
-                        {page.title}
-                      </Button>
+                {menuItems
+                  .filter((item) => item.show) // Filtra apenas os que devem aparecer
+                  .map((item) => (
+                    <MenuItem key={item.title}>
+                      <Link key={item.title} href={item.path} className="mr-5">
+                        {item.title.toUpperCase()}
+                      </Link>
                     </MenuItem>
                   ))}
               </Menu>
             </Box>
-
+            {/*Nav normal*/}
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages &&
-                pages.map((page) => (
+              {menuItems
+                .filter((item) => item.show) // Filtra apenas os que devem aparecer
+                .map((item) => (
                   <Button
-                    key={page.component}
-                    onClick={handleCloseNavMenu}
+                    key={item.title}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                    }}
                     sx={{
                       my: 2,
                       color: "var(--button-header)",
                       display: "block",
                       fontWeight: "bold",
                     }}
-                    href={page.component}
+                    href={item.path}
                   >
-                    {page.title}
+                    {item.title}
                   </Button>
                 ))}
             </Box>
@@ -313,8 +307,11 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
           </Toolbar>
         </Container>
       </AppBar>
-      {openModal && (
-        <ModalEnterRoom openModal={openModal} setOpenModal={handleCloseModal} />
+      {openModalEnterRoom && (
+        <ModalEnterRoom
+          openModal={openModalEnterRoom}
+          setOpenModal={handleCloseModal}
+        />
       )}
     </>
   );

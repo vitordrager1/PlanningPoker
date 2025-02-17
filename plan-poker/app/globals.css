@@ -14,6 +14,10 @@
   --ligth-green-forest: #ced2ba;
   --medium-beige: #8a7b70;
   --white: #fff;
+  --medium-blue: #1b1bff;
+  --hight-yellow: #ffea00;
+  --medium-orange: #ed9600;
+  --hight-red: #ff0000;
 }
 
 /* @media (prefers-color-scheme: dark) {

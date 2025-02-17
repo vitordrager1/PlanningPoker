@@ -38,6 +38,8 @@ import useActiveUsers from "@/app/hooks/ActiveUsers";
 import withAuth from "@/services/authentication/withAuth";
 import Card from "@/app/components/Card";
 import Header from "@/app/components/Header";
+import ModalError from "@/app/layouts/DefaultAlert";
+
 function Room() {
   const params = useParams();
   const router = useRouter();
@@ -122,7 +124,16 @@ function Room() {
 
   // Se a sala não for válida, não renderizar o componente
   if (!isValidRoom) {
-    return <p>Id informado não existe.</p>;
+    console.log("estou aqui");
+    return (
+      <ModalError
+        title="Room not found"
+        message="The identifier provided does not exist, please insert another ID."
+        route="/"
+        severity="info"
+        color="info"
+      />
+    );
   }
 
   const handleVote = async (
