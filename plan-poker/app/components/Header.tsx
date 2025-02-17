@@ -18,22 +18,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-
-const pages = [
-  { title: "create room", component: "create-room" },
-  //{ title: "Compra e Venda", component: "/"},
-  //{ title: "Reclamações", component: "complaints"},
-];
+import { Pages } from "../models/types";
 
 const settings = [
-  {
-    id: 1,
-    option: "Notifications",
-  },
-  {
-    id: 2,
-    option: "Perfil",
-  },
+  // {
+  //   id: 1,
+  //   option: "Notifications",
+  // },
+  // {
+  //   id: 2,
+  //   option: "Perfil",
+  // },
   {
     id: 3,
     option: "Logout",
@@ -50,10 +45,11 @@ const settingsLogin = [
   },
 ];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ componentName }: { componentName: string }) {
   const { user, logOut, signIn, signInAnonymous } = useAuth();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pages, setPages] = useState<Pages[] | null>(null);
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -76,6 +72,22 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  //funções para configurar o menu
+  const startPages = (nameComponent: string) => {
+    if (nameComponent == "home") {
+      let pages = [
+        { title: "Create Room", component: "create-room" },
+        { title: "enter room", component: "" },
+      ];
+      setPages(pages);
+    }
+    if (nameComponent == "create-room") {
+      let pages = [{ title: "Home", component: "/" }];
+      setPages(pages);
+    }
+  };
+
   const handleLogoff = (id: number) => {
     id === 3 && logOut();
   };
@@ -85,23 +97,32 @@ function ResponsiveAppBar() {
     id === 1 && signInAnonymous();
   };
 
+  const handleEnterRoom = () => {
+    console.log("teste");
+    return;
+  };
+
   useEffect(() => {
     setToken(localStorage.getItem("token"));
     setLoading(false);
+    startPages(componentName);
   }, []);
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "var(--header)" }}>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "var(--dark-green-forest)" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Image
-            color="info"
+          {/* <Image
+            color=""
             src="/poker-chip-icon.svg"
             alt="Next.js logo"
             width={72}
             height={72}
             priority
-          />
+          /> */}
           <Typography
             variant="h6"
             noWrap
@@ -113,7 +134,7 @@ function ResponsiveAppBar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "var(--button-header)",
+              color: "var(--white)",
               textDecoration: "none",
             }}
           >
@@ -127,7 +148,7 @@ function ResponsiveAppBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              sx={{ color: "var(--button-header)" }}
+              sx={{ color: "var(--ligth-green-forest)" }}
             >
               <MenuIcon />
             </IconButton>
@@ -152,52 +173,59 @@ function ResponsiveAppBar() {
                 },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.component}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    background: "var(--header)",
-                  }}
-                >
-                  <Typography
+              {pages &&
+                pages.map((page) => (
+                  <MenuItem
+                    key={page.component}
+                    onClick={() => {
+                      handleCloseNavMenu(), handleEnterRoom();
+                    }}
                     sx={{
-                      textAlign: "center",
-                      color: "var(--button-header)",
-                      fontWeight: "bold",
+                      background: "var(--white)",
                     }}
                   >
-                    {page.title}
-                  </Typography>
-                </MenuItem>
-              ))}
+                    <Button
+                      key={page.component}
+                      onClick={handleCloseNavMenu}
+                      sx={{
+                        my: 2,
+                        color: "var(--dark-green-forest)",
+                        background: "var(--ligth-green-forest)",
+                      }}
+                      href={page.component}
+                    >
+                      {page.title}
+                    </Button>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.component}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: "var(--button-header)",
-                  display: "block",
-                  fontWeight: "bold",
-                }}
-                href={page.component}
-              >
-                {page.title}
-              </Button>
-            ))}
+            {pages &&
+              pages.map((page) => (
+                <Button
+                  key={page.component}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2,
+                    color: "var(--button-header)",
+                    display: "block",
+                    fontWeight: "bold",
+                  }}
+                  href={page.component}
+                >
+                  {page.title}
+                </Button>
+              ))}
           </Box>
           {loading ? ( // Exibe o Spinner enquanto o token não é carregado
             <CircularProgress color="success" size={24} />
-          ) : token ? (
+          ) : token ? ( //se estiver logado, exibe o menu settings
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" />
+                  <Avatar alt="user avatar" src={"./avatar.png"} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -237,8 +265,12 @@ function ResponsiveAppBar() {
               <Tooltip title="Open Signup/Login options">
                 <Button
                   variant="contained"
-                  color="secondary"
                   onClick={handleOpenUserMenu}
+                  sx={{
+                    background: "var(--white)",
+                    color: "var(--dark-green-forest)",
+                    fontWeight: "bold",
+                  }}
                 >
                   Login/Signup
                 </Button>

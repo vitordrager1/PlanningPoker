@@ -34,8 +34,9 @@ import {
 //interface
 import { User, CollectionCard } from "@/app/models/types";
 import useActiveUsers from "@/app/hooks/ActiveUsers";
-import withAuth from "@/services/authentication/verifyAuth";
+import withAuth from "@/services/authentication/withAuth";
 import Card from "@/app/components/Card";
+import Header from "@/app/components/Header";
 function Room() {
   const params = useParams();
   const router = useRouter();
@@ -112,41 +113,51 @@ function Room() {
   };
 
   return (
-    <Container className="flex flex-col">
-      <Box
-        className="grid gap-8 p-4 rounded-lg mt-10"
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))" }}
-      >
-        {activeUsers.map((user) => {
-          return (
-            <Box
-              key={user.idUser}
-              className="flex flex-col items-center justify-center min-w-32 min-h-44 p-4 border-2 border-gray-500 rounded-lg shadow-md bg-white"
-            >
-              <Typography fontFamily={"monospace"}>{user.nmUser}</Typography>
-              <Card nrCard={user.nrVote}></Card>
-            </Box>
-          );
-        })}
-      </Box>
+    <>
+      <Header componentName="room" />
+      <Container className="flex flex-col">
+        <Box
+          className="grid gap-8 p-4 rounded-lg mt-10"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+          }}
+        >
+          {activeUsers.map((user) => {
+            return (
+              <Box
+                key={user.idUser}
+                className="flex flex-col items-center justify-center min-w-32 min-h-44 p-4 rounded-lg"
+              >
+                <Box className="min-h-14">
+                  <Typography fontFamily={"monospace"} fontSize={20}>
+                    {typeof user.nmUser === "string" &&
+                      user.nmUser.substring(0, 13)}
+                  </Typography>
+                </Box>
+                <Card nrCard={user.nrVote}></Card>
+              </Box>
+            );
+          })}
+        </Box>
 
-      {/* Seleção de Cartas */}
-      <Box className="flex items-center mx-auto gap-2">
-        {cards.map((card) => (
-          <button
-            key={card.nrCard}
-            onClick={() => handleVote(id, card.nrCard, user?.uid)}
-            className={`p-3 border rounded-md ${
-              selectedVote === card.nrCard
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
-            }`}
-          >
-            {card.nrCard}
-          </button>
-        ))}
-      </Box>
-    </Container>
+        {/* Seleção de Cartas */}
+        <Box className="mt-20 flex items-center mx-auto gap-2">
+          {cards.map((card) => (
+            <Button
+              key={card.nrCard}
+              onClick={() => handleVote(id, card.nrCard, user?.uid)}
+              sx={{
+                background: ` ${selectedVote === card.nrCard ? "var(--medium-beige)" : "var(--medium-green-forest)"}`,
+                color: "var(--white)",
+                fontSize: 20,
+              }}
+            >
+              {card.nrCard}
+            </Button>
+          ))}
+        </Box>
+      </Container>
+    </>
   );
 }
 

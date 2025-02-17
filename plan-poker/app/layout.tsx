@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import { AuthProvider } from "./context/AuthContext";
 import ClientWrapper from "./ClientWrapper";
-
+import React from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,6 +31,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Obtendo dinamicamente o nome do componente filho
+
   return (
     <html lang="pt-br">
       <AuthProvider>
@@ -38,7 +40,6 @@ export default function RootLayout({
           className={`${silkscreen.variable} ${geistMono.variable} antialiased`}
         >
           {/* <ClientWrapper> */}
-          <Header />
           {children}
           {/* </ClientWrapper> */}
         </body>

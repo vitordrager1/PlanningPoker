@@ -8,6 +8,12 @@
   --header: #a61b40;
   --button: #2edff2;
   --button-header: #fff;
+
+  --dark-green-forest: #90987d;
+  --medium-green-forest: #abbd9a;
+  --ligth-green-forest: #ced2ba;
+  --medium-beige: #8a7b70;
+  --white: #fff;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -18,18 +24,12 @@
 } */
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--medium-beige);
+  background: var(--ligth-green-forest);
+  font-family: monospace, Arial, Helvetica, sans-serif;
 }
 
-.defaultRed {
-  color: var(--button-header);
-  background: var(--header);
-}
-
-.defaultBlue {
-  background: #012840;
-  color: #dce0f2;
-  font-family: monospace;
+.button {
+  color: var(--ligth-green-forest);
+  background: var(--dark-green-forest);
 }

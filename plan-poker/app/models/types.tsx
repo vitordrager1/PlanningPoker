@@ -17,3 +17,8 @@ export interface ActiveUser {
   nrVote: number | null;
   nmUser: string | string[] | null;
 }
+
+export interface Pages {
+  title: string;
+  component: string;
+}
