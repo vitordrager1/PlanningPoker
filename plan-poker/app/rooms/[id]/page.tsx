@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../../services/firebase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import {
   createCollectionCard,
   getCards,
@@ -39,6 +39,7 @@ import withAuth from "@/services/authentication/withAuth";
 import Card from "@/app/components/Card";
 import Header from "@/app/components/Header";
 import DefaultAlert from "@/app/layouts/DefaultAlert";
+import { toast } from "react-toastify";
 
 function Room() {
   const params = useParams();
@@ -104,7 +105,7 @@ function Room() {
         <DefaultAlert
           title="Something is wrong..."
           message="Failed to create the room. Contact an administrator."
-          route="/"
+          path="/"
           severity="error"
           color="error"
         />;
@@ -130,15 +131,20 @@ function Room() {
 
   // Se a sala não for válida, não renderizar o componente
   if (!isValidRoom) {
-    return (
-      <DefaultAlert
-        title="Room not found"
-        message="The identifier provided does not exist, please insert another ID."
-        route="/"
-        severity="info"
-        color="info"
-      />
+    toast.info(
+      "The identifier provided does not exist, please insert another ID.",
+      {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      },
     );
+    router.back();
+    return null; // Não renderiza o componente
   }
 
   const handleVote = async (
@@ -158,17 +164,7 @@ function Room() {
   };
 
   return (
-    <>
-      <Header componentName="room" />
-      {DefaultAlert && (
-        <DefaultAlert
-          title="Something is wrong..."
-          message="Failed to update your vote in the room. Contact an administrator."
-          route="/"
-          severity="error"
-          color="error"
-        />
-      )}
+    <Fragment>
       <Container className="flex flex-col">
         <Box
           className="grid gap-8 p-4 rounded-lg mt-10"
@@ -211,7 +207,7 @@ function Room() {
           ))}
         </Box>
       </Container>
-    </>
+    </Fragment>
   );
 }
 

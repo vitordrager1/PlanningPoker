@@ -40,7 +40,7 @@ const settingsLogin = [
   },
 ];
 
-function ResponsiveAppBar({ componentName }: { componentName: string }) {
+function ResponsiveAppBar() {
   const { user, logOut, signIn, signInAnonymous } = useAuth();
   const pathname = usePathname();
   const [token, setToken] = useState<string | null>(null);
@@ -70,18 +70,6 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
     setAnchorElUser(null);
   };
 
-  // const menuItems = [
-  //   { title: "Home", path: "/", show: true },
-  //   { title: "Create Room", path: "create-room", show: true },
-  //   { title: "Enter Room", path: "", show: true, modal: "ModalEnterRoom" },
-  // ];
-
-  // setMenuItems([
-  //   { title: "Home", path: "/", show: true },
-  //   { title: "Create Room", path: "create-room", show: true },
-  //   { title: "Enter Room", path: "", show: true, modal: "ModalEnterRoom" },
-  // ]);
-
   const handleLogoff = (id: number) => {
     id === 3 && logOut();
   };
@@ -109,7 +97,7 @@ function ResponsiveAppBar({ componentName }: { componentName: string }) {
       },
       {
         title: "Enter Room",
-        path: "",
+        path: "#",
         show: pathname.includes("/rooms") ? false : true,
         modal: "ModalEnterRoom",
       },

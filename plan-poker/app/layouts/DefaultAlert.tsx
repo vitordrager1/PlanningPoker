@@ -9,29 +9,27 @@ import { Alert, AlertTitle } from "@mui/material";
 const DefaultAlert: React.FC<AlertProps> = ({
   title,
   message,
-  route,
+  path,
   severity,
   color,
 }) => {
+  const router = useRouter();
+  const handleRedirect = (path?: string) => {
+    if (!path) return;
+    router.prefetch("/" + path);
+  };
   return (
     <>
       <Alert
         severity={severity}
         color={color}
         variant="filled"
-        onClose={() => {}}
+        onClose={() => {
+          handleRedirect(path);
+        }}
       >
         <AlertTitle>{title}</AlertTitle>
         {message}
-        <Button
-          className="float-right mr-auto"
-          color="inherit"
-          variant="outlined"
-          size="large"
-          href={route ? route : ""}
-        >
-          OK
-        </Button>
       </Alert>
     </>
   );

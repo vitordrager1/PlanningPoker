@@ -33,7 +33,7 @@ export interface ModalEnterRoomProps {
 export interface AlertProps {
   title?: string;
   message?: string;
-  route?: string;
+  path?: string;
   severity: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>;
   color: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>;
 }

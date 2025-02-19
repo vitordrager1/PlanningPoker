@@ -2,9 +2,12 @@
 import FormVotingSystem from "../components/FormVotingSystem";
 import { Container, Stack, Box } from "@mui/material";
 import DayTimeFrame from "../components/DayTimeFrame";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import withAuth from "@/services/authentication/withAuth";
 import Header from "@/app/components/Header";
+
+//TODO: Definir um tipo para a função CreateRoom
+//TODO: Ajustar a handleVottingSystemChange, para uma props de callback
 function PageCreateRoom() {
   const [selectedSystem, setSelectedSystem] = useState(1); //Default value Fibonacci
 
@@ -13,8 +16,7 @@ function PageCreateRoom() {
   };
 
   return (
-    <>
-      <Header componentName="create-room" />
+    <Fragment>
       <Container>
         <Box mx={"auto"} mt={5}>
           <Stack
@@ -32,7 +34,7 @@ function PageCreateRoom() {
           </Stack>
         </Box>
       </Container>
-    </>
+    </Fragment>
   );
 }
 

@@ -6,7 +6,9 @@ import DefaultText from "./layouts/DefaultText";
 import { useAuth } from "./context/AuthContext";
 import Header from "@/app/components/Header";
 import ModalEnterRoom from "./components/ModalEnterRoom";
-import { useState } from "react";
+import { useState, Fragment } from "react";
+
+//TODO: Definir um tipo para a função HOME
 export default function Home() {
   const { user } = useAuth();
   const [openModal, setOpenModal] = useState(false);
@@ -16,8 +18,7 @@ export default function Home() {
   };
   const handleCloseModal = () => setOpenModal(false);
   return (
-    <>
-      <Header componentName="home" />
+    <Fragment>
       <Container>
         <Stack mt={15}>
           <DefaultTitle
@@ -50,15 +51,12 @@ export default function Home() {
           </Box>
         </Stack>
       </Container>
+      {
+        // TODO: Adicionar algumas imagens da funcionalidade
+      }
       {openModal && (
         <ModalEnterRoom openModal={openModal} setOpenModal={handleCloseModal} />
       )}
-    </>
+    </Fragment>
   );
 }
-
-/*
-Adicionar exemplos da funciolidade
-
-
-*/
