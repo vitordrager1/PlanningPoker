@@ -85,18 +85,16 @@ function Room() {
     const validateIdRoom = async () => {
       try {
         const isValid = await isRoom(id);
-        if (!isValid) {
-          setIsValidRoom(false);
-        } else {
-          setIsValidRoom(true);
-        }
+        setIsValidRoom(isValid);
+        return isValid;
       } catch (error) {
         console.log(error);
-        setIsValidRoom(false);
+        const isValid = false;
+        setIsValidRoom(isValid);
         toast.error(
           "Failed to validate the room. Please try again or concatct a administrator.",
         );
-        return null;
+        return isValid;
       }
     };
 
@@ -108,7 +106,6 @@ function Room() {
           user.displayName,
           selectedVote,
         ); // Aguarde a atualização da sala
-        console.log("Passei pelo cotrollerActive");
       } catch (error) {
         console.error(
           "Failed to update the room users (addUserToRoom):",
@@ -121,8 +118,8 @@ function Room() {
       }
     };
 
-    validateIdRoom().then(() => {
-      if (isValidRoom) {
+    validateIdRoom().then((isValid) => {
+      if (isValid) {
         addUserToRoom();
       }
     });
