@@ -135,12 +135,6 @@ function Room() {
     return <p>Carregando...</p>;
   }
 
-  //Se o Hook nao carregou, aguarda
-  if (activeUsers.length == 0) {
-    console.log(activeUsers);
-    return <p>Carregando...</p>;
-  }
-
   // Se a sala não for válida, não renderizar o componente
   if (!isValidRoom) {
     toast.warn(
