@@ -35,7 +35,7 @@ export const createRoom = async (
     return docRef.id;
   } catch (error) {
     console.error("Erro ao criar sala:", error);
-    return null;
+    throw error;
   }
 };
 
@@ -73,7 +73,7 @@ export const controllerActiveUsersRoom = async (
     return userRef.id;
   } catch (error) {
     console.error("Erro ao adicionar usuário à sala:", error);
-    return null;
+    throw error;
   }
 };
 
@@ -108,7 +108,7 @@ export const getUsersActiveRoom = async (idRoom: string | string[]) => {
     return users;
   } catch (error) {
     console.error("Erro ao buscar usuários ativos na sala:", error);
-    return [];
+    throw error;
   }
 };
 
@@ -156,9 +156,6 @@ export const isRoom = async (roomId: string | string[]): Promise<boolean> => {
     return roomSnap.exists();
   } catch (error) {
     console.error("Erro ao verificar a existência da sala:", error);
-    return false; // Em caso de erro, retorna false por segurança
+    throw error; // Em caso de erro, retorna false por segurança
   }
 };
-
-// export default createRoom;
-// export default updateActiveUsersRoom;

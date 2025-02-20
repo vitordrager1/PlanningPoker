@@ -69,12 +69,16 @@ function Room() {
         setCards(cards);
       } catch (error) {
         console.log(error);
+        toast.error(
+          "Failed to get the Vote Card. Please try again or concatct a administrator.",
+        );
+        return null;
       }
     };
     getCardsFibonacci();
   }, []);
 
-  //Atualiza o activeUsersRoom quando o usuário é carregado na pagina (o useAuth altera o status do loading)
+  //Verifica se o ID da sala é válido e Atualiza o activeUsersRoom quando o usuário é carregado na pagina (o useAuth altera o status do loading)
   useEffect(() => {
     if (!user || !id) return;
 
@@ -89,6 +93,10 @@ function Room() {
       } catch (error) {
         console.log(error);
         setIsValidRoom(false);
+        toast.error(
+          "Failed to validate the room. Please try again or concatct a administrator.",
+        );
+        return null;
       }
     };
 
@@ -96,19 +104,20 @@ function Room() {
       try {
         await controllerActiveUsersRoom(
           id,
-          "user.uid",
+          user.uid,
           user.displayName,
           selectedVote,
         ); // Aguarde a atualização da sala
+        console.log("Passei pelo cotrollerActive");
       } catch (error) {
-        console.error("Failed to create the room:", error);
-        <DefaultAlert
-          title="Something is wrong..."
-          message="Failed to create the room. Contact an administrator."
-          path="/"
-          severity="error"
-          color="error"
-        />;
+        console.error(
+          "Failed to update the room users (addUserToRoom):",
+          error,
+        );
+        toast.error(
+          "Failed to update the room users. Please try again or concatct a administrator.",
+        );
+        return null;
       }
     };
 
@@ -129,21 +138,18 @@ function Room() {
     return <p>Carregando...</p>;
   }
 
+  //Se o Hook nao carregou, aguarda
+  if (activeUsers.length == 0) {
+    console.log(activeUsers);
+    return <p>Carregando...</p>;
+  }
+
   // Se a sala não for válida, não renderizar o componente
   if (!isValidRoom) {
-    toast.info(
+    toast.warn(
       "The identifier provided does not exist, please insert another ID.",
-      {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      },
     );
-    router.back();
+    router.push("/");
     return null; // Não renderiza o componente
   }
 
@@ -158,8 +164,14 @@ function Room() {
       // Atualiza o Firestore com o voto do usuário
       await updateActiveUserField(idRoom, idUser, "nrVote", vote);
     } catch (error) {
-      console.error("Failed to update the room:", error);
-      setOpenModalError(true);
+      console.error(
+        "Failed to update your vote (updateActiveUserField):",
+        error,
+      );
+      toast.error(
+        "Failed to update your vote. Please try again or concatct a administrator.",
+      );
+      return null;
     }
   };
 

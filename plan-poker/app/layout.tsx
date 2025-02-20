@@ -42,7 +42,11 @@ export default function RootLayout({
           className={`${silkscreen.variable} ${geistMono.variable} antialiased`}
         >
           <Header />
-          <ToastContainer />
+          <ToastContainer
+            autoClose={5000}
+            theme="colored"
+            closeOnClick={true}
+          />
           {children}
         </body>
       </AuthProvider>
