@@ -87,6 +87,7 @@ const FormVotingSystem: React.FC<VotingSystemProps> = ({
           required
           margin="normal"
           onChange={handleChangeName}
+          fullWidth
         ></TextField>
         <TextField
           id="outlined-select-currency"
@@ -97,6 +98,7 @@ const FormVotingSystem: React.FC<VotingSystemProps> = ({
           margin="normal"
           onChange={handleChange}
           required
+          fullWidth
         >
           {votingSystem.map((option) => (
             <MenuItem key={option.id} value={option.id}>
