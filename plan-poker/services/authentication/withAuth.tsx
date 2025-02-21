@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface WithAuthProps {
   children: React.ReactNode;
@@ -16,8 +17,9 @@ const withAuth = (Component: React.ComponentType) => {
         setToken(storedToken);
 
         if (!storedToken) {
-          console.log("Token não encontrado, redirecionando...");
-          alert("Você precisa estar logado para acessar esta página.");
+          console.log("No token founded...");
+          // alert("Você precisa estar logado para acessar esta página.");
+          toast.warn("You must be logged in to access a room.");
           router.push("/"); // Redireciona para a página de login
         }
       }
