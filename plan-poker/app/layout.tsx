@@ -33,8 +33,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Obtendo dinamicamente o nome do componente filho
-
   return (
     <html lang="pt-br">
       <AuthProvider>
