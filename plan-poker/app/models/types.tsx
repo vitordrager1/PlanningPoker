@@ -28,7 +28,7 @@ export interface Pages {
 
 export interface ModalEnterRoomProps {
   openModal: boolean;
-  setOpenModal: (state: boolean) => void;
+  handleCloseModal: (state: boolean) => void;
 }
 export interface AlertProps {
   title?: string;

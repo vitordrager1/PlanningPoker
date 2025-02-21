@@ -1,21 +1,27 @@
-import { Box, Typography, Modal, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Modal,
+  Button,
+  TextField,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Textarea from "@mui/joy/Textarea";
 import { ModalEnterRoomProps } from "../models/types";
+import DefaultTitle from "../layouts/DefaultTitle";
+import DefaultText from "../layouts/DefaultText";
 
 const ModalEnterRoom: React.FC<ModalEnterRoomProps> = ({
   openModal,
-  setOpenModal,
+  handleCloseModal,
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(openModal);
   const [idRoom, setIdRoom] = useState(String);
-  // Funções para abrir e fechar o modal
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpenModal(false);
-  };
+
   //
   const handleChangeIdRoom = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIdRoom(event.target.value); //event vem sempre em string
@@ -44,7 +50,7 @@ const ModalEnterRoom: React.FC<ModalEnterRoomProps> = ({
       {/* Modal que exibe os comentarios */}
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
       >
@@ -59,6 +65,11 @@ const ModalEnterRoom: React.FC<ModalEnterRoomProps> = ({
             margin: "auto",
           }}
         >
+          <IconButton onClick={handleCloseModal} sx={{ float: "right" }}>
+            <CloseIcon />
+          </IconButton>
+
+          <DefaultText text="Enter Room" fontFamily="monospace" size={30} />
           <form onSubmit={handleSubmit}>
             <TextField
               id="id-room"

@@ -79,8 +79,11 @@ function ResponsiveAppBar() {
     id === 1 && signInAnonymous();
   };
 
-  const handleOpenModalEnterRoom = () => {
-    setOpenModalEnterRoom(true);
+  const handleOpenModalEnterRoom = (modal?: string) => {
+    if (modal == "ModalEnterRoom") {
+      setOpenModalEnterRoom(true);
+    }
+    return null;
   };
   const handleCloseModal = () => setOpenModalEnterRoom(false);
 
@@ -175,7 +178,14 @@ function ResponsiveAppBar() {
                   .filter((item) => item.show) // Filtra apenas os que devem aparecer
                   .map((item) => (
                     <MenuItem key={item.title}>
-                      <Link key={item.title} href={item.path} className="mr-5">
+                      <Link
+                        key={item.title}
+                        href={item.path}
+                        className="mr-5"
+                        onClick={() => {
+                          handleOpenModalEnterRoom(item.modal);
+                        }}
+                      >
                         {item.title.toUpperCase()}
                       </Link>
                     </MenuItem>
@@ -191,6 +201,7 @@ function ResponsiveAppBar() {
                     key={item.title}
                     onClick={() => {
                       handleCloseNavMenu();
+                      handleOpenModalEnterRoom(item.modal);
                     }}
                     sx={{
                       my: 2,
@@ -210,7 +221,7 @@ function ResponsiveAppBar() {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="user avatar" src={"./avatar.png"} />
+                    <Avatar alt="user avatar" src={`${user?.photoURL}`} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -298,7 +309,7 @@ function ResponsiveAppBar() {
       {openModalEnterRoom && (
         <ModalEnterRoom
           openModal={openModalEnterRoom}
-          setOpenModal={handleCloseModal}
+          handleCloseModal={handleCloseModal}
         />
       )}
     </>
