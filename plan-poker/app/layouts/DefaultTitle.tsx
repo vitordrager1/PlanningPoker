@@ -1,14 +1,35 @@
-import { Box, Typography } from "@mui/material";
-export default function DefaultTitle({
-  title,
-  style,
-}: {
+import {
+  Box,
+  Typography,
+  TypographyPropsVariantOverrides,
+} from "@mui/material";
+import { Variant } from "@mui/material/styles/createTypography";
+import { OverridableStringUnion } from "@mui/types";
+import { ReactElement } from "react";
+
+interface DefaultTitleProps {
   title: string;
-  style: string;
-}) {
+  fontFamily: string;
+  variant?: OverridableStringUnion<
+    Variant | "inherit",
+    TypographyPropsVariantOverrides
+  >;
+  fontStyle?: string;
+}
+
+export default function DefaultText({
+  title,
+  fontFamily,
+  variant,
+  fontStyle,
+}: DefaultTitleProps): ReactElement {
   return (
     <Box>
-      <Typography fontFamily={"monospace"} variant="h2" fontStyle={`${style}`}>
+      <Typography
+        fontFamily={fontFamily}
+        variant={variant}
+        fontStyle={`${fontStyle}`}
+      >
         {title}
       </Typography>
     </Box>

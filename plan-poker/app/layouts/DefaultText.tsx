@@ -1,8 +1,27 @@
 import { Box, Typography } from "@mui/material";
-export default function DefaultTitle({ text }: { text: string }) {
+import { ReactElement } from "react";
+
+interface DefaultTextProps {
+  text: string;
+  fontFamily: string;
+  size: number;
+  fontStyle?: string;
+}
+
+export default function DefaultText({
+  text,
+  fontFamily,
+  size,
+  fontStyle,
+}: DefaultTextProps): ReactElement {
   return (
     <Box>
-      <Typography fontFamily={"monospace"} fontWeight={700}>
+      <Typography
+        fontFamily={fontFamily}
+        fontWeight={700}
+        fontSize={size}
+        fontStyle={fontStyle}
+      >
         {text}
       </Typography>
     </Box>

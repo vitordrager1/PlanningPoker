@@ -23,9 +23,15 @@ export default function Home() {
         <Stack mt={15}>
           <DefaultTitle
             title="Start your sprint in the best way!"
-            style="bold"
+            fontFamily="monospace"
+            fontStyle="bold"
+            variant="h2"
           />
-          <DefaultText text="easy to use, relaxed and fun." />
+          <DefaultText
+            text="easy to use, relaxed and fun."
+            fontFamily="monospace"
+            size={20}
+          />
           <Box mt={3}>
             <Button
               variant="contained"
@@ -55,7 +61,10 @@ export default function Home() {
         // TODO: Adicionar algumas imagens da funcionalidade
       }
       {openModal && (
-        <ModalEnterRoom openModal={openModal} setOpenModal={handleCloseModal} />
+        <ModalEnterRoom
+          openModal={openModal}
+          handleCloseModal={handleCloseModal}
+        />
       )}
     </Fragment>
   );
