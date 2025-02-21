@@ -62,7 +62,8 @@ const FormVotingSystem: React.FC<VotingSystemProps> = ({
       const idRoom = await createRoom(nameRoom, selectedSystem, 1);
       // Verifica se o ID foi retornado corretamente
       if (idRoom) {
-        router.push("/rooms/" + idRoom); // Redireciona para a sala
+        //router.push("/rooms/" + idRoom); // Redireciona para a sala
+        window.location.href = "/rooms/" + idRoom; //Recarrega a página para remontar o HEADER
       } else {
         console.error("Erro: ID da sala não foi gerado.");
       }
