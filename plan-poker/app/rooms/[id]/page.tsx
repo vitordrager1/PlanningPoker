@@ -37,10 +37,8 @@ import { User, CollectionCard } from "@/app/models/types";
 import useActiveUsers from "@/app/hooks/ActiveUsers";
 import withAuth from "@/services/authentication/withAuth";
 import Card from "@/app/components/Card";
-import Header from "@/app/components/Header";
-import DefaultAlert from "@/app/layouts/DefaultAlert";
 import { toast } from "react-toastify";
-
+import CoffeeIcon from "@mui/icons-material/Coffee";
 function Room() {
   const params = useParams();
   const router = useRouter();
@@ -49,7 +47,6 @@ function Room() {
   const [cards, setCards] = useState<CollectionCard[]>([]);
   const [selectedVote, setSelectedVote] = useState<number | null>(null);
   const [isValidRoom, setIsValidRoom] = useState<boolean | null>(null);
-  const [openModalError, setOpenModalError] = useState(false);
   //chama o hook para atualizar a lista de usuários
   const { activeUsers } = useActiveUsers(id);
 
@@ -149,7 +146,7 @@ function Room() {
     vote: number,
     idUser?: string,
   ) => {
-    if (!user || !idRoom || !idUser || !vote) return; // Se user for null, sai da função
+    if (!user || !idRoom || !idUser) return; // Se user for null, sai da função
     setSelectedVote(vote);
     try {
       // Atualiza o Firestore com o voto do usuário
@@ -203,9 +200,10 @@ function Room() {
                 background: ` ${selectedVote === card.nrCard ? "var(--medium-beige)" : "var(--medium-green-forest)"}`,
                 color: "var(--white)",
                 fontSize: 20,
+                height: 40,
               }}
             >
-              {card.nrCard}
+              {card.nrCard ? card.nrCard : <CoffeeIcon />}
             </Button>
           ))}
         </Box>

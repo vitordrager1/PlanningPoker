@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
 import { Box, Typography } from "@mui/material";
-import dataVotingSystem from "../../database/SystemVoting.json";
+import CoffeeIcon from "@mui/icons-material/Coffee";
 const Card = ({ nrCard }: { nrCard: number | null }) => {
   return (
     <Box
@@ -17,7 +16,7 @@ const Card = ({ nrCard }: { nrCard: number | null }) => {
         fontSize={70}
         align="center"
       >
-        {nrCard ?? "❔"}
+        {nrCard ? nrCard : <CoffeeIcon />}
       </Typography>
     </Box>
   );
