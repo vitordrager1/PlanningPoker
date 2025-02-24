@@ -17,7 +17,7 @@ interface DefaultTitleProps {
   fontStyle?: string;
 }
 
-export default function DefaultText({
+export default function DefaultTitle({
   title,
   fontFamily,
   variant,
