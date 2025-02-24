@@ -14,6 +14,7 @@ import {
 import { useState, Fragment } from "react";
 import withAuth from "@/services/authentication/withAuth";
 import { createRoom } from "@/services/rooms/rooms-firebase";
+import { useAuth } from "../context/AuthContext";
 
 interface VotingSystem {
   id: number;
@@ -35,10 +36,10 @@ const votingSystem: VotingSystem[] = [
 ];
 
 //TODO: Definir um tipo para a função CreateRoom
-//TODO: Ajustar a handleVottingSystemChange, para uma props de callback
 function PageCreateRoom() {
   const [selectedSystem, setSelectedSystem] = useState(1); //Default value Fibonacci
   const [nameRoom, setNameRoom] = useState(String);
+  const { user } = useAuth();
 
   const handleVotingSystemChange = (newVotingSystem: number) => {
     setSelectedSystem(newVotingSystem);
@@ -58,7 +59,7 @@ function PageCreateRoom() {
     event.preventDefault();
     try {
       // Aguarda a resolução da promessa
-      const idRoom = await createRoom(nameRoom, selectedSystem, 1);
+      const idRoom = await createRoom(nameRoom, selectedSystem, user?.uid);
       // Verifica se o ID foi retornado corretamente
       if (idRoom) {
         //router.push("/rooms/" + idRoom); // Redireciona para a sala
