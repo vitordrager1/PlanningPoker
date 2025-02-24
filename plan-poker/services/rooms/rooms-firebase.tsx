@@ -20,7 +20,7 @@ Descrição: Criar uma nova sala, para agrupar usuários de uma seção
 export const createRoom = async (
   roomName: string,
   selectedSystem: number,
-  hostId: number,
+  hostId: string | null,
 ) => {
   try {
     // Adiciona uma nova sala ao Firestore
@@ -132,7 +132,7 @@ export const updateActiveUserField = async (
       [field]: value, // Atualiza dinamicamente o campo desejado
     });
 
-    console.log(`Campo ${field} atualizado com sucesso!`);
+    //console.log(`Campo ${field} atualizado com sucesso!`);
   } catch (error) {
     console.error("Erro ao atualizar o campo do usuário:", error);
     throw error;
