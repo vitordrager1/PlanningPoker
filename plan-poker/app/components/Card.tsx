@@ -1,6 +1,7 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import CoffeeIcon from "@mui/icons-material/Coffee";
+//TODO: Criar uma interface props e ajustar o retorno. Utilizar também uma função declarada ao invés de arrow function
 const Card = ({ nrCard }: { nrCard: number | null }) => {
   return (
     <Box

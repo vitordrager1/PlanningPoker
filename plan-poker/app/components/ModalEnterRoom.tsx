@@ -14,6 +14,7 @@ import { ModalEnterRoomProps } from "../models/types";
 import DefaultTitle from "../layouts/DefaultTitle";
 import DefaultText from "../layouts/DefaultText";
 
+//TODO: Declarar este componente como uma função declarada. Ajustar a tipagem.
 const ModalEnterRoom: React.FC<ModalEnterRoomProps> = ({
   openModal,
   handleCloseModal,

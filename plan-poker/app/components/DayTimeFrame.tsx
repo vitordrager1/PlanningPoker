@@ -12,6 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 import dataVotingSystem from "../../database/SystemVoting.json";
+
+//Refatorar este componente... Esta um lixo.
 const DayTimeFrame = ({ id }: { id: number }) => {
   return (
     <Box className="defaultBlue">

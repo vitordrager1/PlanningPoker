@@ -35,7 +35,7 @@ const votingSystem: VotingSystem[] = [
   },
 ];
 
-//TODO: Definir um tipo para a função CreateRoom
+//TODO: Definir um tipo para a função CreateRoom. Ajustar o nome desta função para apenas CreateRoom
 function PageCreateRoom() {
   const [selectedSystem, setSelectedSystem] = useState(1); //Default value Fibonacci
   const [nameRoom, setNameRoom] = useState(String);
