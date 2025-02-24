@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext"; // Seu contexto de autenticação
 import { ActiveUser } from "@/app/models/types";
-
+import { usePathname } from "next/navigation";
 // export default function useActiveUsers(idRoom: string) {
 //   const { user } = useAuth(); // Usuário logado
 //   const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
@@ -70,18 +70,18 @@ import { ActiveUser } from "@/app/models/types";
 //   return { activeUsers };
 // }
 
-import { useRouter } from "next/navigation";
-
+//TODO: Excluir também a collection room, caso não haja nenhum usuário ativo na sessão.
 export default function useActiveUsers(idRoom?: string | string[]) {
   const { user } = useAuth();
-  const router = useRouter();
+  const pathname = usePathname(); // ✅ Detecta mudanças de rota
+  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
 
   useEffect(() => {
     if (!user || !idRoom) return;
 
     const userRef = doc(db, "activeUsersRoom", `${idRoom}_${user.uid}`);
 
-    // ✅ Adiciona o usuário à coleção quando ele entra na sala
+    // ✅ Adiciona o usuário na coleção
     const addUser = async () => {
       await setDoc(userRef, {
         idUser: user.uid,
@@ -92,28 +92,56 @@ export default function useActiveUsers(idRoom?: string | string[]) {
     };
     addUser();
 
-    // ✅ Remove o usuário quando ele sai da sala
+    // ✅ Remove o usuário ao sair
     const removeUser = async () => {
       await deleteDoc(userRef);
     };
 
-    // 🔹 1) Quando o usuário fecha a aba ou recarrega a página
+    // 🔹 1) Quando o usuário FECHA A ABA ou RECARREGA A PÁGINA
     const handleBeforeUnload = () => {
       removeUser();
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // 🔹 2) Quando o usuário troca de rota no Next.js
+    // 🔹 2) Quando o usuário TROCA DE PÁGINA
+    let lastPath = pathname;
     const handleRouteChange = () => {
-      removeUser();
+      if (pathname !== lastPath) {
+        removeUser();
+        lastPath = pathname;
+      }
     };
-    router.events.on("routeChangeStart", handleRouteChange);
+
+    const interval = setInterval(handleRouteChange, 500); // Checa mudanças de rota a cada 500ms
+
+    const q = query(
+      collection(db, "activeUsersRoom"),
+      where("idRoom", "==", idRoom),
+    );
+
+    // Listener para atualizações em tempo real
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const usersData = await Promise.all(
+        snapshot.docs.map(async (docSnap) => {
+          const userData = docSnap.data();
+          return {
+            idUser: userData.idUser,
+            idRoom: userData.idRoom,
+            nrVote: userData.nrVote,
+            nmUser: userData.nmUser ? userData.nmUser : "Anônimo",
+          };
+        }),
+      );
+
+      setActiveUsers(usersData);
+    });
 
     return () => {
+      unsubscribe();
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      router.events.off("routeChangeStart", handleRouteChange);
+      clearInterval(interval); // Remove o interval ao desmontar o componente
     };
-  }, [idRoom, user]);
+  }, [idRoom, user, pathname]);
 
-  return {};
+  return { activeUsers };
 }

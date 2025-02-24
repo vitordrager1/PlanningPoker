@@ -33,6 +33,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  //TODO: Criar um contexto de groupLoader e aciona-lo quando o componente estiver carregando.
   return (
     <html lang="pt-br">
       <AuthProvider>

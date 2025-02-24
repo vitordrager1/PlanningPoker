@@ -34,7 +34,8 @@ const ModalEnterRoom: React.FC<ModalEnterRoomProps> = ({
     try {
       // Verifica se o ID foi retornado corretamente
       if (idRoom) {
-        router.push("/rooms/" + idRoom); // Redireciona para a sala
+        // router.push("/rooms/" + idRoom); // Redireciona para a sala
+        window.location.href = "/rooms/" + idRoom;
       } else {
         console.error("Erro ao tentar entrar na sala." + idRoom);
       }

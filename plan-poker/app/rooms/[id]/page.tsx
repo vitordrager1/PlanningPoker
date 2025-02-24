@@ -95,29 +95,30 @@ function Room() {
       }
     };
 
-    const addUserToRoom = async () => {
-      try {
-        await controllerActiveUsersRoom(
-          id,
-          user.uid,
-          user.displayName,
-          selectedVote,
-        ); // Aguarde a atualização da sala
-      } catch (error) {
-        console.error(
-          "Failed to update the room users (addUserToRoom):",
-          error,
-        );
-        toast.error(
-          "Failed to update the room users. Please try again or concatct a administrator.",
-        );
-        return null;
-      }
-    };
+    // const addUserToRoom = async () => {
+    //   try {
+    //     await controllerActiveUsersRoom(
+    //       id,
+    //       user.uid,
+    //       user.displayName,
+    //       selectedVote,
+    //     ); // Aguarde a atualização da sala
+    //   } catch (error) {
+    //     console.error(
+    //       "Failed to update the room users (addUserToRoom):",
+    //       error,
+    //     );
+    //     toast.error(
+    //       "Failed to update the room users. Please try again or concatct a administrator.",
+    //     );
+    //     return null;
+    //   }
+    // };
 
     validateIdRoom().then((isValid) => {
       if (isValid) {
-        addUserToRoom();
+        // addUserToRoom();
+        return null;
       }
     });
   }, [loading]);
