@@ -104,6 +104,7 @@ function ResponsiveAppBar() {
         show: pathname.includes("/rooms") ? false : true,
         modal: "ModalEnterRoom",
       },
+      { title: "Sobre", path: "/about", show: true },
     ]);
   }, []);
 

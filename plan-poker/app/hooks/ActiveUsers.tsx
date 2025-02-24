@@ -13,6 +13,13 @@ import {
 import { useAuth } from "../context/AuthContext"; // Seu contexto de autenticação
 import { ActiveUser } from "@/app/models/types";
 import { usePathname } from "next/navigation";
+
+/*
+------------------------------------------------------
+Este hook atualiza os usuários ativos em uma sala.
+------------------------------------------------------
+*/
+
 // export default function useActiveUsers(idRoom: string) {
 //   const { user } = useAuth(); // Usuário logado
 //   const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);

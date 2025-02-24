@@ -28,10 +28,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../../services/firebase";
 import { useEffect, useState, Fragment } from "react";
-import {
-  createCollectionCard,
-  getCards,
-} from "@/services/cards/cards-firebase";
+import { getCards } from "@/services/cards/cards-firebase";
 //interface
 import { User, CollectionCard } from "@/app/models/types";
 import useActiveUsers from "@/app/hooks/ActiveUsers";
@@ -39,6 +36,9 @@ import withAuth from "@/services/authentication/withAuth";
 import Card from "@/app/components/Card";
 import { toast } from "react-toastify";
 import CoffeeIcon from "@mui/icons-material/Coffee";
+import ButtonCopyUrl from "@/app/components/Buttons/ButtonCopyIdRoom";
+
+//TODO: Ajustar a tipagem...
 function Room() {
   const params = useParams();
   const router = useRouter();
@@ -49,9 +49,9 @@ function Room() {
   const [isValidRoom, setIsValidRoom] = useState<boolean | null>(null);
   //chama o hook para atualizar a lista de usuários
   const { activeUsers } = useActiveUsers(id);
-
+  const idRoom = Array.isArray(id) ? id[0] : id;
   //Define que o idRoom é obrigatório
-  if (!id) {
+  if (!idRoom) {
     // Redirecionar para uma página de erro ou para a página inicial
     router.push("/");
     return null; // Retorna null para evitar renderização desnecessária
@@ -77,11 +77,11 @@ function Room() {
 
   //Verifica se o ID da sala é válido e Atualiza o activeUsersRoom quando o usuário é carregado na pagina (o useAuth altera o status do loading)
   useEffect(() => {
-    if (!user || !id) return;
+    if (!user || !idRoom) return;
 
     const validateIdRoom = async () => {
       try {
-        const isValid = await isRoom(id);
+        const isValid = await isRoom(idRoom);
         setIsValidRoom(isValid);
         return isValid;
       } catch (error) {
@@ -94,26 +94,6 @@ function Room() {
         return isValid;
       }
     };
-
-    // const addUserToRoom = async () => {
-    //   try {
-    //     await controllerActiveUsersRoom(
-    //       id,
-    //       user.uid,
-    //       user.displayName,
-    //       selectedVote,
-    //     ); // Aguarde a atualização da sala
-    //   } catch (error) {
-    //     console.error(
-    //       "Failed to update the room users (addUserToRoom):",
-    //       error,
-    //     );
-    //     toast.error(
-    //       "Failed to update the room users. Please try again or concatct a administrator.",
-    //     );
-    //     return null;
-    //   }
-    // };
 
     validateIdRoom().then((isValid) => {
       if (isValid) {
@@ -142,11 +122,7 @@ function Room() {
     return null; // Não renderiza o componente
   }
 
-  const handleVote = async (
-    idRoom: string | string[],
-    vote: number,
-    idUser?: string,
-  ) => {
+  const handleVote = async (idRoom: string, vote: number, idUser?: string) => {
     if (!user || !idRoom || !idUser) return; // Se user for null, sai da função
     setSelectedVote(vote);
     try {
@@ -167,6 +143,9 @@ function Room() {
   return (
     <Fragment>
       <Container className="flex flex-col">
+        <Box className="float-right mt-5 justify-end flex">
+          <ButtonCopyUrl idRoom={idRoom} />
+        </Box>
         <Box
           className="grid gap-8 p-4 rounded-lg mt-10"
           style={{
@@ -196,7 +175,7 @@ function Room() {
           {cards.map((card) => (
             <Button
               key={card.nrCard}
-              onClick={() => handleVote(id, card.nrCard, user?.uid)}
+              onClick={() => handleVote(idRoom, card.nrCard, user?.uid)}
               sx={{
                 background: ` ${selectedVote === card.nrCard ? "var(--medium-beige)" : "var(--medium-green-forest)"}`,
                 color: "var(--white)",

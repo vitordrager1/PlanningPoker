@@ -12,6 +12,8 @@ import {
 import { db } from "../firebase"; // Configuração do Firebase
 import { User, ActiveUser } from "@/app/models/types";
 
+//TODO: Tipar todas os services abaixo.
+
 /* -------------------------------------------------
 Autor: Vitor Drager
 Coleção: rooms
@@ -144,7 +146,7 @@ Autor: Vitor Drager
 Coleção: rooms
 Descrição: Retornar um indicador true ou false referente a existencia de uma sala na coleção.
 -------------------------------------------------*/
-export const isRoom = async (roomId: string | string[]): Promise<boolean> => {
+export const isRoom = async (roomId: string): Promise<boolean> => {
   try {
     if (!roomId) return false; // Se o roomId for inválido, retorna false
 
