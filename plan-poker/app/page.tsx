@@ -27,11 +27,9 @@ export default function Home() {
             fontStyle="bold"
             variant="h2"
           />
-          <DefaultText
-            text="easy to use, relaxed and fun."
-            fontFamily="monospace"
-            size={20}
-          />
+          <DefaultText fontFamily="monospace" size={20}>
+            easy to use, relaxed and fun.
+          </DefaultText>
           <Box mt={3}>
             <Button
               variant="contained"

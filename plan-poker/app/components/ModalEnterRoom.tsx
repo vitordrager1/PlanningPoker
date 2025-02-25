@@ -71,7 +71,9 @@ const ModalEnterRoom: React.FC<ModalEnterRoomProps> = ({
             <CloseIcon />
           </IconButton>
 
-          <DefaultText text="Enter Room" fontFamily="monospace" size={30} />
+          <DefaultText fontFamily="monospace" size={30}>
+            Enter Room
+          </DefaultText>
           <form onSubmit={handleSubmit}>
             <TextField
               id="id-room"

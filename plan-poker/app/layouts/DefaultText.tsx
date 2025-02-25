@@ -1,15 +1,15 @@
 import { Box, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 interface DefaultTextProps {
-  text: string;
+  children: ReactNode;
   fontFamily: string;
   size: number;
   fontStyle?: string;
 }
 
 export default function DefaultText({
-  text,
+  children,
   fontFamily,
   size,
   fontStyle,
@@ -22,7 +22,7 @@ export default function DefaultText({
         fontSize={size}
         fontStyle={fontStyle}
       >
-        {text}
+        {children}
       </Typography>
     </Box>
   );
