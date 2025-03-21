@@ -37,6 +37,24 @@ export default function About(): ReactElement {
           </DefaultText>
         </Stack>
       </Box>
+
+      <Box
+        className="relative bg-cover bg-center h-screen"
+        sx={{"backgroundImage: url('/fichas')"}}
+      >
+
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <div className="backdrop-blur-md bg-white bg-opacity-30 p-8 rounded-lg shadow-lg">
+            <h1 className="text-3xl font-bold text-white">
+              Frosted Glass Effect
+            </h1>
+            <p className="mt-4 text-white">
+              This is a frosted glass card overlaying a blurred background.
+            </p>
+          </div>
+        </div>
+      </Box>
     </Container>
   );
 }
