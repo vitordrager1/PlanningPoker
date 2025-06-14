@@ -10,7 +10,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
-import { CollectionCard } from "@/app/models/types";
+import { CollectionCard } from "@/models/types";
 
 /* -------------------------------------------------
 Autor: Vitor Drager

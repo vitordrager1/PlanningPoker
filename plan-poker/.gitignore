@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#firebase config
+.poker-plan-br-firebase-adminsdk-fbsvc-026f3e86ab

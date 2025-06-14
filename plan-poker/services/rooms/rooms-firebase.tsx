@@ -10,7 +10,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase"; // Configuração do Firebase
-import { User, ActiveUser } from "@/app/models/types";
+import { User, ActiveUser } from "@/models/types";
 
 //TODO: Tipar todas os services abaixo.
 

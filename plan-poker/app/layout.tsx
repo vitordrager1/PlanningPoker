@@ -1,26 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Silkscreen } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
-import { AuthProvider } from "./context/AuthContext";
-import React from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { auth } from "@/auth";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { SessionProvider } from "next-auth/react";
+import Header from "@/components/Header/header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const silkscreen = Silkscreen({
-  weight: "400",
-  variable: "--font-silkscreen",
-  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -28,27 +16,22 @@ export const metadata: Metadata = {
   description: "Planning your sprint",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //TODO: Criar um contexto de groupLoader e aciona-lo quando o componente estiver carregando.
+  const session = await auth();
   return (
-    <html lang="pt-br">
-      <AuthProvider>
-        <body
-          className={`${silkscreen.variable} ${geistMono.variable} antialiased`}
-        >
-          <Header />
-          <ToastContainer
-            autoClose={5000}
-            theme="colored"
-            closeOnClick={true}
-          />
-          {children}
-        </body>
-      </AuthProvider>
+    <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
+      <body className="font-sans" suppressHydrationWarning>
+        <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
+          <SessionProvider session={session}>
+            <Header />
+            {children}
+          </SessionProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
